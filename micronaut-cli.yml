@@ -1,0 +1,5 @@
+profile: cli
+defaultPackage: running.dinner.cli
+---
+testFramework: spock
+sourceLanguage: groovy

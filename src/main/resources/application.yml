@@ -1,0 +1,8 @@
+micronaut:
+    application:
+        name: running-dinner-cli
+---
+flexbillet:
+    host: https://flexbillet.dk
+    token: yshghae8py
+    passphrase: 153156931324854365b7fec310e51540cadf743244cbd409
