@@ -58,7 +58,7 @@ class FlexbilletService {
                 default:
                     return value
             }
-        } catch (e) {
+        } catch (ignore) {
             log.warn("Error parsing $columnInfo.id unknown for $value")
             return value
         }
@@ -69,7 +69,7 @@ class FlexbilletService {
     private Map<Integer, Map> mapColumns(List<Map> maps) {
         maps.collectEntries {
             [it.index, [
-                    name: (it.header as String).uncapitalize(),
+                    name: (it.header as String).uncapitalize().replaceAll(/\s+/,''),
                     type: it.datatype
             ]]
         }
