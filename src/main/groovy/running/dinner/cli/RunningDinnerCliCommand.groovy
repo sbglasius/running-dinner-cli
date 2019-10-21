@@ -6,15 +6,22 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer
 import groovy.transform.Memoized
+import groovy.util.logging.Slf4j
 import io.micronaut.configuration.picocli.PicocliRunner
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
-import running.dinner.FlexbilletService
+import running.dinner.data.GuestGroup
+import running.dinner.data.Host
+import running.dinner.flexbillet.FlexbilletService
+import running.dinner.mapper.Mapper
+import running.dinner.processor.GuestProcessor
+import running.dinner.processor.GuestRandomizer
 
 import javax.inject.Inject
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+@Slf4j
 @Command(name = 'running-dinner-cli', description = '...',
         mixinStandardHelpOptions = true)
 class RunningDinnerCliCommand implements Runnable {
@@ -29,18 +36,34 @@ class RunningDinnerCliCommand implements Runnable {
     @Option(names = ['-m', '--map'], description = 'Generate map data')
     boolean map
 
+    @Option(names = ['-s'])
+    boolean sort
+
     static void main(String[] args) throws Exception {
         PicocliRunner.run(RunningDinnerCliCommand.class, args)
     }
 
     void run() {
         List<Map> data = fetchDataService.fetchData()
-        if (verbose) {
-            println mapper.writeValueAsString(data)
-        }
+//        if (verbose) {
+
+
+            Map<String, Map<String, List<Map>>> sorted = GuestProcessor.sortGuests(data)
+            List<GuestGroup> guests = Mapper.mapGuests(sorted['guests'])
+            List<Host> hosts = Mapper.mapHosts(sorted['hosts'])
+
+            log.debug mapper.writeValueAsString(guests)
+            log.debug ('-'*80)
+            GuestRandomizer.randomize(guests, hosts)
+            log.debug mapper.writeValueAsString(hosts)
+            log.debug ('-'*80)
+
+
+//        }
         if(map) {
             generateMapData(data)
         }
+
     }
 
     void generateMapData(List<Map> data) {
@@ -53,7 +76,7 @@ class RunningDinnerCliCommand implements Runnable {
         }.unique()
 
         adresses.each {
-            println it
+            log.debug it
         }
     }
 

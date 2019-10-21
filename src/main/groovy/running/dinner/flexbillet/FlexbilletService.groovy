@@ -1,4 +1,4 @@
-package running.dinner
+package running.dinner.flexbillet
 
 import groovy.util.logging.Slf4j
 
@@ -7,7 +7,6 @@ import javax.inject.Singleton
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.ZoneOffset
-import java.time.ZonedDateTime
 
 @Singleton
 @Slf4j
@@ -31,7 +30,7 @@ class FlexbilletService {
             row.findAll { column -> column.value }.collectEntries { column ->
                 Map columnInfo = columns[column['column-index'] as Integer] as Map
                 [columnInfo.name, extractValue(column.value, columnInfo)]
-            }
+            }.findAll { it.value }
 
         }
     }
@@ -68,11 +67,24 @@ class FlexbilletService {
 
     private Map<Integer, Map> mapColumns(List<Map> maps) {
         maps.collectEntries {
+            String header = it.header as String
             [it.index, [
-                    name: (it.header as String).uncapitalize().replaceAll(/\s+/,''),
+                    name: normalizeName(header),
                     type: it.datatype
             ]]
         }
+    }
+
+    private String normalizeName(String header) {
+        return header.uncapitalize().
+                replaceAll(/[\s.]+/, '').
+                replaceAll('æ','ae').
+                replaceAll('Æ','Ae').
+                replaceAll('ø','oe').
+                replaceAll('Ø','Oe').
+                replaceAll('å','aa').
+                replaceAll('Å','Aa')
+
     }
 
 }
