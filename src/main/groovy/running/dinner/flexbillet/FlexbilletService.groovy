@@ -6,10 +6,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import java.time.LocalDateTime
 import java.time.ZoneId
-import java.time.ZoneOffset
 
-@Singleton
 @Slf4j
+@Singleton
 class FlexbilletService {
 
     @Inject
@@ -88,3 +87,5 @@ class FlexbilletService {
     }
 
 }
+
+import java.time.ZoneOffset

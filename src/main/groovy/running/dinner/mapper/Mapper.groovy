@@ -1,9 +1,11 @@
 package running.dinner.mapper
 
+import groovy.util.logging.Slf4j
 import running.dinner.data.Guest
 import running.dinner.data.GuestGroup
 import running.dinner.data.Host
 
+@Slf4j
 class Mapper {
     static List<GuestGroup> mapGuests(Map guestsMap) {
         guestsMap.collect { key, guestsInGroup ->
@@ -26,7 +28,7 @@ class Mapper {
 
     private static List<Guest> mapGuestsInGroup(Map guestsInGroup) {
         return guestsInGroup.collect {
-            new Guest(it.navn as String, it.mobil as String, it.email as String)
+            new Guest(it.navn as String, it.mobil as String, it.email as String, it.adresse, it.allergener, it.hensyn)
         }
     }
 }

@@ -9,4 +9,8 @@ class GuestGroup {
     Integer getSize() {
         guests.size()
     }
+
+    boolean getFaellesAdresse() {
+        guests.every { it.adresse.toLowerCase() == guests[0].adresse.toLowerCase() }
+    }
 }

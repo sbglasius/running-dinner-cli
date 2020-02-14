@@ -6,3 +6,9 @@ flexbillet:
     host: https://flexbillet.dk
     token: tkl6o6ypdy
     passphrase: 153156931324854365b7fec310e51540cadf743244cbd409
+---
+guests:
+    preprocess:
+        101010:
+            abc: 123
+            def: 345

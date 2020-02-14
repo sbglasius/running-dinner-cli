@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer
 import groovy.transform.Memoized
 import groovy.util.logging.Slf4j
+import io.micronaut.configuration.picocli.MicronautFactory
 import io.micronaut.configuration.picocli.PicocliRunner
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
@@ -22,8 +23,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @Slf4j
-@Command(name = 'running-dinner-cli', description = '...',
-        mixinStandardHelpOptions = true)
+@Command(name = 'running-dinner-cli')
 class RunningDinnerCliCommand implements Runnable {
 
 
@@ -46,21 +46,24 @@ class RunningDinnerCliCommand implements Runnable {
     void run() {
         List<Map> data = fetchDataService.fetchData()
 //        if (verbose) {
+        GuestProcessor.groupSingles(data)
+        GuestProcessor.preprocessGuests(data)
+        Map<String, Map<String, List<Map>>> sorted = GuestProcessor.sortGuests(data)
+        List<GuestGroup> guests = Mapper.mapGuests(sorted['guests'])
+        List<Host> hosts = Mapper.mapHosts(sorted['hosts'])
 
+        log.debug('-' * 80)
+        GuestRandomizer randomizer = GuestRandomizer.randomize(guests, hosts)
+        hosts.each { host ->
+            log.debug "-- ${host.guests*.name.join(', ')} ${host.vegetar ? "- vegetar ":''}".padRight(80,'-')
+            log.debug "-- MaxGuests: ${host.maxGuests} - entre: ${host.courses.entre.size()} - main: ${host.courses.main.size()} - "
+        }
 
-            Map<String, Map<String, List<Map>>> sorted = GuestProcessor.sortGuests(data)
-            List<GuestGroup> guests = Mapper.mapGuests(sorted['guests'])
-            List<Host> hosts = Mapper.mapHosts(sorted['hosts'])
-
-            log.debug mapper.writeValueAsString(guests)
-            log.debug ('-'*80)
-            GuestRandomizer.randomize(guests, hosts)
-            log.debug mapper.writeValueAsString(hosts)
-            log.debug ('-'*80)
-
+        log.debug('-' * 80)
+        log.debug(mapper.writeValueAsString(randomizer.notAllocated))
 
 //        }
-        if(map) {
+        if (map) {
             generateMapData(data)
         }
 
@@ -69,7 +72,7 @@ class RunningDinnerCliCommand implements Runnable {
     void generateMapData(List<Map> data) {
         List<String> adresses = data.collect {
             String address = it.adresse
-            if(!(address ==~ /.*\d{4}.*/)) {
+            if (!(address ==~ /.*\d{4}.*/)) {
                 address += ', 8680 Ry'
             }
             return "${address.toLowerCase()}" as String

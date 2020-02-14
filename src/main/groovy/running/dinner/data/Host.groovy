@@ -10,5 +10,9 @@ class Host extends GuestGroup {
     String foodDescription
     boolean allergenes
 
+    boolean getVegetar() {
+        foodType == 'Vegetar mad'
+    }
+
     Map<String, List<Guest>> courses = [:]
 }
