@@ -14,10 +14,14 @@ class Guest {
 
 
     boolean getVegetar() {
-        allergener == 'Vegetar'
+        allergener == 'Vegetar' || allergener == 'Veganer'
     }
 
-    boolean getHarAllergi() {
+    boolean getVeganer() {
+        allergener == 'Veganer'
+    }
+
+    boolean getAllergy() {
         allergener == 'Allergier eller andet'
     }
 }

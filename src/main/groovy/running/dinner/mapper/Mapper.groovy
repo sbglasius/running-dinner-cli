@@ -16,13 +16,16 @@ class Mapper {
 
     static List<Host> mapHosts(Map<String, List<Map>> hostMap) {
         hostMap.collect { key, hostsInGroup ->
-            int max = hostsInGroup[0].maxGaester as int
-            String address = hostsInGroup[0].vaertAdresse
-            String serves = hostsInGroup[0].vaertServerer
-            String foodDescription = hostsInGroup[0].vaertServererAndet
-            boolean allergenes = hostsInGroup[0].jaTilAllergener
+            Map host = hostsInGroup.find { !it.vaertHjaelp }
+            int max = host.maxGaester as int
+            String address = host.vaertAdresse
+            String serves = host.vaertServerer
+            String foodDescription = host.vaertServererAndet
+            boolean allergenes = host.jaTilAllergener
             List<Guest> guests = mapGuestsInGroup(hostsInGroup as Map)
-            return new Host(guests, max, address, serves, foodDescription, allergenes)
+            boolean useMobilePay = host.mobilePayOK
+            String mobilePay = host.mobilePayNummer
+            return new Host(guests, max, address, useMobilePay ? mobilePay : null, serves, foodDescription, allergenes, [entre: guests.collect(), main: guests.collect()])
         }
     }
 

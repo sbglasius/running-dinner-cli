@@ -5,8 +5,8 @@ import groovy.util.logging.Slf4j
 @Slf4j
 class GuestProcessor {
     static Map<String, Map> koebsrefMapping = [
-            '1006556': [koebsref: '1007383', maxGaester: 8, vaertAdresse: 'Ryesgade 9A, Gl. Rye, 8680 Ry', foodType: 'Vegetar mad'],
-            '1006444': [koebsref: '1007427', maxGaester: 8, vaertAdresse: 'Skovlunden 3, Gl. Rye, 8680 Ry', foodType: '"Alm. mad"']
+            '1006556': [koebsref: '1007383', vaertHjaelp: true],
+            '1006444': [koebsref: '1007427', vaertHjaelp: true]
     ]
 
     static Map<String, Map<String, List<Map>>> sortGuests(List<Map> unsorted) {
@@ -32,10 +32,14 @@ class GuestProcessor {
 
     static void groupSingles(List<Map> guests) {
         List<Map> singles = guests.groupBy { it.koebsref }.findAll { it.value.size() == 1 }.collect { it.value }.flatten()
+        List<Map> singlesVegetar = singles.findAll { it.test }
+        shuffleSingles(singles)
+    }
 
+    private static void shuffleSingles(List<Map> singles) {
         Collections.shuffle(singles)
         singles.collate(2).each {
-            if(it.size() == 2) {
+            if (it.size() == 2) {
                 it[1].koebsref = it[0].koebsref
             }
         }
