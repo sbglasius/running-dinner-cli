@@ -10,9 +10,11 @@ import groovy.util.logging.Slf4j
 import io.micronaut.configuration.picocli.PicocliRunner
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
+import running.dinner.transfer.ExportImport
 import running.dinner.data.Guest
 import running.dinner.data.GuestGroup
 import running.dinner.data.Host
+import running.dinner.excel.SpreadsheetOutput
 import running.dinner.flexbillet.FlexbilletService
 import running.dinner.mapper.Mapper
 import running.dinner.processor.GuestProcessor
@@ -84,6 +86,10 @@ class RunningDinnerCliCommand implements Runnable {
                 println MessageTemplates.createHostEmail(host)
             }
         }
+        SpreadsheetOutput.buildSpreadsheet(hosts)
+        ExportImport.exportData(hosts)
+        List<Host> hostsRead = ExportImport.importData()
+        log.debug(hostsRead.toString())
     }
 
     void printCourse(Host host, String course) {

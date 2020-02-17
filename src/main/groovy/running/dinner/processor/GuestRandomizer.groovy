@@ -22,10 +22,16 @@ class GuestRandomizer {
     }
 
     GuestRandomizer distributeGuestsOnHosts() {
-        guestGroups.each { GuestGroup guestGroup ->
+        guestGroups.findAll { it.guests.any { it.vegetar}}.each { GuestGroup guestGroup ->
             addGuestToHost(guestGroup, 'entre')
         }
-        guestGroups.reverse().each { GuestGroup guestGroup ->
+        guestGroups.findAll { !(it.guests.any { it.vegetar }) }.each { GuestGroup guestGroup ->
+            addGuestToHost(guestGroup, 'entre')
+        }
+        guestGroups.findAll { it.guests.any { it.vegetar } }.each { GuestGroup guestGroup ->
+            addGuestToHost(guestGroup, 'main', 'entre')
+        }
+        guestGroups.findAll { !(it.guests.any { it.vegetar }) }.each { GuestGroup guestGroup ->
             addGuestToHost(guestGroup, 'main', 'entre')
         }
 

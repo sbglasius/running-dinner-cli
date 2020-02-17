@@ -47,6 +47,12 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter-api"
     testRuntimeOnly "org.junit.vintage:junit-vintage-engine:5.5.0"
     testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+
+    // Excel
+    implementation 'builders.dsl:spreadsheet-builder-poi:2.0.0'
+    // for groovy support
+    implementation 'builders.dsl:spreadsheet-builder-groovy:2.0.0'
+
 }
 
 test.classpath += configurations.developmentOnly
