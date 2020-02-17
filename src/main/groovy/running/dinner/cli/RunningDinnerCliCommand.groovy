@@ -47,20 +47,26 @@ class RunningDinnerCliCommand implements Runnable {
     }
 
     void run() {
-        List<Map> data = fetchDataService.fetchData()
-        log.debug("Alm mad: ${data.count { it.allergener == 'Ingen særlige hensyn' }}")
-        log.debug("Vegetar: ${data.count { it.allergener == 'Vegetar' }}")
-        log.debug("Veganer: ${data.count { it.allergener == 'Veganer' }}")
-        log.debug("Allergi: ${data.count { it.allergener == 'Allergier eller andet' }}")
+        List<Host> hosts = ExportImport.importData()
+        if (!hosts) {
+
+            log.debug("New data fetch")
+            List<Map> data = fetchDataService.fetchData()
+            log.debug("Alm mad: ${data.count { it.allergener == 'Ingen særlige hensyn' }}")
+            log.debug("Vegetar: ${data.count { it.allergener == 'Vegetar' }}")
+            log.debug("Veganer: ${data.count { it.allergener == 'Veganer' }}")
+            log.debug("Allergi: ${data.count { it.allergener == 'Allergier eller andet' }}")
 
 //        if (verbose) {
-        GuestProcessor.preprocessGuests(data)
-        GuestProcessor.groupSingles(data)
-        Map<String, Map<String, List<Map>>> sorted = GuestProcessor.sortGuests(data)
-        List<GuestGroup> guests = Mapper.mapGuests(sorted['guests'])
-        List<Host> hosts = Mapper.mapHosts(sorted['hosts'])
+            GuestProcessor.preprocessGuests(data)
+            GuestProcessor.groupSingles(data)
+            Map<String, Map<String, List<Map>>> sorted = GuestProcessor.sortGuests(data)
+            List<GuestGroup> guests = Mapper.mapGuests(sorted['guests'])
+            hosts = Mapper.mapHosts(sorted['hosts'])
+            GuestRandomizer randomizer = GuestRandomizer.randomize(guests, hosts)
+            ExportImport.exportData(hosts)
+        }
 
-        GuestRandomizer randomizer = GuestRandomizer.randomize(guests, hosts)
         if (verbose) {
             hosts.each { host ->
                 println('-' * 80)
@@ -87,9 +93,6 @@ class RunningDinnerCliCommand implements Runnable {
             }
         }
         SpreadsheetOutput.buildSpreadsheet(hosts)
-        ExportImport.exportData(hosts)
-        List<Host> hostsRead = ExportImport.importData()
-        log.debug(hostsRead.toString())
     }
 
     void printCourse(Host host, String course) {

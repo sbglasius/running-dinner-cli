@@ -21,9 +21,12 @@ class ExportImport {
     static List<Host> importData() {
         File file = new File('hosts.json')
 
-        Hosts hosts = mapper.readValue(file, Hosts)
+        if(file.exists()) {
+            Hosts hosts = mapper.readValue(file, Hosts)
 
-        return hosts.hosts
+            return hosts.hosts
+        }
+        return null
 
     }
 }
