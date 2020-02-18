@@ -1,4 +1,4 @@
-package running.dinner.excel
+package running.dinner.output
 
 
 import builders.dsl.spreadsheet.builder.poi.PoiSpreadsheetBuilder

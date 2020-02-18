@@ -10,11 +10,11 @@ import groovy.util.logging.Slf4j
 import io.micronaut.configuration.picocli.PicocliRunner
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
+import running.dinner.output.WordOutput
 import running.dinner.transfer.ExportImport
 import running.dinner.data.Guest
 import running.dinner.data.GuestGroup
 import running.dinner.data.Host
-import running.dinner.excel.SpreadsheetOutput
 import running.dinner.flexbillet.FlexbilletService
 import running.dinner.mapper.Mapper
 import running.dinner.processor.GuestProcessor
@@ -40,7 +40,7 @@ class RunningDinnerCliCommand implements Runnable {
     boolean map
 
     @Option(names = ['--hostEmail'], description = 'Send first email to hosts')
-    boolean hostEmail = true
+    boolean hostEmail
 
     static void main(String[] args) throws Exception {
         PicocliRunner.run(RunningDinnerCliCommand.class, args)
@@ -92,7 +92,11 @@ class RunningDinnerCliCommand implements Runnable {
                 println MessageTemplates.createHostEmail(host)
             }
         }
-        SpreadsheetOutput.buildSpreadsheet(hosts)
+//        SpreadsheetOutput.buildSpreadsheet(hosts)
+        WordOutput.hostWineInformation(hosts)
+        WordOutput.hostEnvelopeWithPostcards(hosts)
+        WordOutput.guestsPostcards(hosts)
+
     }
 
     void printCourse(Host host, String course) {
