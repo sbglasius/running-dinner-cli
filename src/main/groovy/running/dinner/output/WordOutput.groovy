@@ -49,7 +49,7 @@ class WordOutput {
 
    static void guestsPostcards(List<Host> hosts) {
 
-        WordDocumentBuilder wordBuilder = new WordDocumentBuilder(new File('kuvertPostkort.docx'))
+        WordDocumentBuilder wordBuilder = new WordDocumentBuilder(new File('gæste-postkort.docx'))
         greeting.delegate = wordBuilder
         footer.delegate = wordBuilder
         wordBuilder.create {

@@ -1,33 +1,27 @@
 package running.dinner.templates
 
+import running.dinner.data.Guest
+import running.dinner.data.GuestGroup
 import running.dinner.data.Host
 
 class MessageTemplates {
     static String createHostEmail(Host host) {
         String foodNotes = ''
-        if(host.courses.entre.any { it.hensyn}) {
-            foodNotes += """Til forretten er der bedt om flg. hensyn:
-                ${host.courses.entre*.hensyn.findAll().collect { "* $it" }.join('\n                ')}
-            """
-        }
-        if(host.courses.main.any { it.hensyn}) {
-            foodNotes += """Til hovedretten er der bedt om flg. hensyn:
-                ${host.courses.main*.hensyn.findAll().collect { "* $it"}.join('\n                ')}
-            """
-        }
-        if(host.courses.entre.any { it.veganer }) {
+        foodNotes += hensyn(host.entreCourseGuests, 'forretten')
+        foodNotes += hensyn(host.mainCourseGuests, 'hovedretten')
+        if(host.entreCourseGuests*.guests.flatten().any { it.veganer }) {
             foodNotes += 'Til forretten er der en eller flere veganere.\n'
         }
-        if(host.courses.main.any { it.veganer }) {
+        if(host.mainCourseGuests*.guests.flatten().any { it.veganer }) {
             foodNotes += 'Til hovedretten er der en eller flere veganere.\n'
         }
         return """\
             Kære ${host.names}
             
-            Tak fordi I vil være vært til Running Dinner! I er sikkert spændte på, hvem der banker på jeres dør den 7. marts. Den spænding må I holde lidt endnu. Lige nu kan vi kun afsløre, at der kommer ${host.entres} til forret og ${host.mains} til hovedret (inkl. jer selv). I bestemmer selv, hvad I vil servere for jeres gæster${host.vegetar ? ' og vi har noteret at I serverer vegetarisk mad':''}. 
+            Tak fordi I vil være vært til Running Dinner! I er sikkert spændte på, hvem der banker på jeres dør den 7. marts. Den spænding må I holde lidt endnu. Lige nu kan vi kun afsløre, at der kommer ${host.entreCourseSeats} til forret og ${host.mainCourseSeats} til hovedret (inkl. jer selv). I bestemmer selv, hvad I vil servere for jeres gæster${host.vegetar ? ' og vi har noteret at I serverer vegetarisk mad':''}. 
 
             ${foodNotes}
-            Vi sørger for, at I får ${[host.entres, host.mains].max() * 125} kr. udbetalt ${host.mobilePay ? "på MobilePay (på mobil nr. ${host.mobilePay})" : "på bankkonto (*)"}, som bidrag til maden. I Byens Egen Butik kan I hente en pose med hvidvin og rødvin til maden sponsoreret af Brugsen.
+            Vi sørger for, at I får ${[host.entreCourseSeats, host.mainCourseSeats].max() * 125} kr. udbetalt ${host.mobilePay ? "på MobilePay (på mobil nr. ${host.mobilePay})" : "på bankkonto (*)"}, som bidrag til maden. I Byens Egen Butik kan I hente en pose med hvidvin og rødvin til maden sponsoreret af Brugsen.
             
             Her er en tidsplan for aftenen:
             
@@ -65,6 +59,17 @@ class MessageTemplates {
             
             Running Dinner udvalget.
             """.stripIndent()
+    }
+
+    private static String hensyn(List<GuestGroup> guestGroups, String ret) {
+        List<Guest> guests = guestGroups.guests.flatten() as List<Guest>
+
+        if (guests.any { it.hensyn }) {
+            return """Til ${ret} er der bedt om flg. hensyn:
+                ${guests.findAll{ it.hensyn }.collect { "* $it.hensyn" }.join('\n                ')}
+            """
+        }
+        return ''
     }
 
 //    static String createGæstMail(Vært vært, Deltager deltager) {

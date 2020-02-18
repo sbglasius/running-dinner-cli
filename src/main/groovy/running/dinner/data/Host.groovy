@@ -1,7 +1,6 @@
 package running.dinner.data
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import groovy.transform.ToString
 import groovy.transform.TupleConstructor
 
 @TupleConstructor(includeSuperProperties = true)
@@ -18,16 +17,17 @@ class Host extends GuestGroup {
         foodType == 'Vegetar mad'
     }
 
-    Map<String, List<Guest>> courses = [:]
+    List<GuestGroup> entreCourseGuests = []
+    List<GuestGroup> mainCourseGuests = []
 
     @JsonIgnore
-    int getEntres() {
-        courses.entre.size()
+    int getEntreCourseSeats() {
+        guests.size() + (entreCourseGuests.sum { it.size } ?: 0)
     }
 
     @JsonIgnore
-    int getMains() {
-        courses.main.size()
+    int getMainCourseSeats() {
+        guests.size() + (mainCourseGuests.sum { it.size } ?: 0)
     }
 
     String toString() {

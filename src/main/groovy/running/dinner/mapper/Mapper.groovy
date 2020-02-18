@@ -25,7 +25,7 @@ class Mapper {
             List<Guest> guests = mapGuestsInGroup(hostsInGroup as Map)
             boolean useMobilePay = host.mobilePayOK
             String mobilePay = host.mobilePayNummer
-            return new Host(guests, max, address, useMobilePay ? mobilePay : null, serves, foodDescription, allergenes, [entre: guests.collect(), main: guests.collect()])
+            return new Host(guests, max, address, useMobilePay ? mobilePay : null, serves, foodDescription, allergenes)
         }
     }
 

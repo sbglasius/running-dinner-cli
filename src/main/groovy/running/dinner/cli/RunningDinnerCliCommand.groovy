@@ -10,6 +10,7 @@ import groovy.util.logging.Slf4j
 import io.micronaut.configuration.picocli.PicocliRunner
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
+import running.dinner.output.SpreadsheetOutput
 import running.dinner.output.WordOutput
 import running.dinner.transfer.ExportImport
 import running.dinner.data.Guest
@@ -34,13 +35,13 @@ class RunningDinnerCliCommand implements Runnable {
     FlexbilletService fetchDataService
 
     @Option(names = ['-v', '--verbose'], description = 'Print reg json')
-    boolean verbose
+    boolean verbose = true
 
     @Option(names = ['-m', '--map'], description = 'Generate map data')
     boolean map
 
     @Option(names = ['--hostEmail'], description = 'Send first email to hosts')
-    boolean hostEmail
+    boolean hostEmail = true
 
     static void main(String[] args) throws Exception {
         PicocliRunner.run(RunningDinnerCliCommand.class, args)
@@ -64,6 +65,7 @@ class RunningDinnerCliCommand implements Runnable {
             List<GuestGroup> guests = Mapper.mapGuests(sorted['guests'])
             hosts = Mapper.mapHosts(sorted['hosts'])
             GuestRandomizer randomizer = GuestRandomizer.randomize(guests, hosts)
+            log.debug(mapper.writeValueAsString(randomizer.notAllocated))
             ExportImport.exportData(hosts)
         }
 
@@ -71,16 +73,13 @@ class RunningDinnerCliCommand implements Runnable {
             hosts.each { host ->
                 println('-' * 80)
                 println "-- Værter: ${host.shortNames} ${host.vegetar ? " (vegetar) " : ''}"
-                def entre = host.courses.entre?.size()
-                def main = host.courses.main?.size()
-                println "-- Til forret: ${entre}"
-                printCourse(host, 'entre')
-                println "-- Til hovedret: ${main}"
-                printCourse(host, 'main')
+                println "-- Til forret: ${host.entreCourseSeats}"
+                printCourse(host.entreCourseGuests)
+                println "-- Til hovedret: ${host.mainCourseSeats}"
+                printCourse(host.mainCourseGuests)
                 println "-- Udbetal ${host.mobilePay ? "til MobilePay: $host.mobilePay" : 'konto'}"
 
             }
-            log.debug(mapper.writeValueAsString(randomizer.notAllocated))
         }
         if (map) {
             generateMapData(data)
@@ -92,15 +91,15 @@ class RunningDinnerCliCommand implements Runnable {
                 println MessageTemplates.createHostEmail(host)
             }
         }
-//        SpreadsheetOutput.buildSpreadsheet(hosts)
+        SpreadsheetOutput.buildSpreadsheet(hosts)
         WordOutput.hostWineInformation(hosts)
         WordOutput.hostEnvelopeWithPostcards(hosts)
         WordOutput.guestsPostcards(hosts)
 
     }
 
-    void printCourse(Host host, String course) {
-        List<Guest> guests = host.courses[course]
+    void printCourse(List<GuestGroup> guestGroup) {
+        List<Guest> guests = guestGroup*.guests.flatten()
         guests.each {
             println "--   ${it.name} ${it.vegetar ? " (vegetar)" : ''}"
         }

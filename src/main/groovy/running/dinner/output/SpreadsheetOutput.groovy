@@ -34,24 +34,28 @@ class SpreadsheetOutput {
                     }
                     row {
                         cell 'Forret'
-                        cell host.entres
+                        cell host.entreCourseSeats
                     }
-                    host.courses.entre.each { guest ->
-                        row {
-                            cell()
-                            cell "${guest.name}"
-                            cell "${guest.allergy ? guest.hensyn ?: '' : guest.veganer ? 'Veganer' : guest.vegetar ? 'Vegetar' : ''}"
+                    host.entreCourseGuests.eachWithIndex { guestGroup, index ->
+                        guestGroup.guests.each { guest ->
+                            row {
+                                cell()
+                                cell "${index+1}: ${guest.name}"
+                                cell "${guest.allergy ? guest.hensyn ?: '' : guest.veganer ? 'Veganer' : guest.vegetar ? 'Vegetar' : ''}"
+                            }
                         }
                     }
                     row {
                         cell 'Hovedret'
-                        cell host.mains
+                        cell host.mainCourseSeats
                     }
-                    host.courses.main.each { guest ->
-                        row {
-                            cell()
-                            cell "${guest.name}"
-                            cell "${guest.allergy ? guest.hensyn : guest.veganer ? 'Veganer' : guest.vegetar ? 'Vegetar' : ''}"
+                    host.mainCourseGuests.eachWithIndex { guestGroup, index ->
+                        guestGroup.guests.each { guest ->
+                            row {
+                                cell()
+                                cell "${index + 1}: ${guest.name}"
+                                cell "${guest.allergy ? guest.hensyn : guest.veganer ? 'Veganer' : guest.vegetar ? 'Vegetar' : ''}"
+                            }
                         }
                     }
                 }

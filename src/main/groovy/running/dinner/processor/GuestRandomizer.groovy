@@ -42,19 +42,19 @@ class GuestRandomizer {
         boolean vegitarianGuests = guestGroup.guests.any { it.vegetar }
         boolean allergeneGuests = guestGroup.guests.any { it.allergy }
         List<Host> availableHosts = hosts.findAll { Host host ->
-            int guestsInGroup = host.courses[course].size()
-            List<Guest> avoidGuests = avoid ? host.courses[avoid] : []
+            int guestsInGroup = course == 'entre' ? host.entreCourseSeats : host.mainCourseSeats
+            List<GuestGroup> avoidGuests = avoid == 'entre' ?  host.entreCourseGuests : []
             return host.vegetar == vegitarianGuests &&
                     host.allergenes == allergeneGuests &&
                     guestGroup.size <= (host.maxGuests - guestsInGroup) &&
-                    !(guestGroup.guests.any { it in avoidGuests })
+                    !(guestGroup.any { it in avoidGuests })
         }
         if (!availableHosts) {
             availableHosts = hosts.findAll { Host host ->
-                int guestsInGroup = host.courses[course].size()
-                List<Guest> avoidGuests = avoid ? host.courses[avoid] : []
+                int guestsInGroup = course == 'entre' ? host.entreCourseSeats : host.mainCourseSeats
+                List<GuestGroup> avoidGuests = avoid == 'entre' ? host.entreCourseGuests : []
                 return guestGroup.size <= (host.maxGuests - guestsInGroup) &&
-                        !(guestGroup.guests.any { it in avoidGuests })
+                        !(guestGroup.any { it in avoidGuests })
             } ?: []
         }
 //        log.debug "vegetarGaester: $vegitarianGuests allergeneGuests: $allergeneGuests antalVaerter: ${availableHosts.size()} "
@@ -66,6 +66,6 @@ class GuestRandomizer {
         }
         Host host = availableHosts[random.nextInt(availableHosts.size())]
 
-        host.courses[course].addAll(guestGroup.guests)
+        (course == 'entre' ? host.entreCourseGuests : host.mainCourseGuests) << guestGroup
     }
 }
