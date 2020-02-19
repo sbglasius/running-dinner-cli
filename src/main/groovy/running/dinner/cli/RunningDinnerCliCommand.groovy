@@ -91,7 +91,7 @@ class RunningDinnerCliCommand implements Runnable {
                 println "-- Udbetal ${host.mobilePay ? "til MobilePay: $host.mobilePay" : 'konto'}"
             }
         }
-        if (true) {
+        if (map) {
             generateMapData(hosts.hosts*.hostAddress)
         }
 
