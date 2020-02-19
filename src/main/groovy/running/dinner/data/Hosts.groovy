@@ -1,7 +1,12 @@
 package running.dinner.data
 
+import com.fasterxml.jackson.annotation.JsonIgnore
+
 class Hosts {
     List<Host> hosts
+
+
+    Map<String, List<GuestGroup>> notAllocated
 
     Host findEntreCourseHost(GuestGroup guestGroup) {
         hosts.find { host ->
@@ -14,6 +19,7 @@ class Hosts {
         }
     }
 
+    @JsonIgnore
     List<GuestGroup> getAllGuests() {
         hosts*.entreCourseGuests.flatten().sort { it.shortNames } as List<GuestGroup>
     }

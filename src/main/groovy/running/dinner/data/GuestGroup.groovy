@@ -27,13 +27,13 @@ class GuestGroup {
             } else {
             return it}
         }
-        return noLastNames.size() > 1 ?  "${noLastNames[0..-2].join(', ')} og ${names[-1]}" : names[0]
+        return names.size() > 1 ?  "${noLastNames[0..-2].join(', ')} og ${names[-1]}" : names[0]
     }
 
     @JsonIgnore
     String getNames() {
         List<String> names = guests*.name
-        return names[0..-2].join(', ') + ' og ' + names[-1]
+        return names.size() > 1 ? names[0..-2].join(', ') + ' og ' + names[-1] : names[0]
     }
 
 }

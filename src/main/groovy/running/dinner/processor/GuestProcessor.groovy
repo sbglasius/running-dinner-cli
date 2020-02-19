@@ -5,18 +5,16 @@ import groovy.util.logging.Slf4j
 @Slf4j
 class GuestProcessor {
     static Map<String, Map> koebsrefMapping = [
-            '1006556': [koebsref: '1007383', vaertHjaelp: true],
-            '1006444': [koebsref: '1007427', vaertHjaelp: true]
+            '1007383': [single: true],
+            '1006556': [koebsref: '1007383', hostHelper: true, single: true],
+            '1006444': [koebsref: '1007427', hostHelper: true]
     ]
 
     static Map<String, Map<String, List<Map>>> sortGuests(List<Map> unsorted) {
-
         def groupedGuests = unsorted.groupBy { it.koebsref }
         return groupedGuests.groupBy { ref, guests ->
             return guests.any { it.maxGaester } ? 'hosts' : 'guests'
         } as Map<String, Map<String, List<Map>>>
-
-
     }
 
     /**

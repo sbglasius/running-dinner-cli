@@ -46,7 +46,7 @@ class RunningDinnerCliCommand implements Runnable {
     boolean map
 
     @Option(names = ['--hostEmail'], description = 'Send first email to hosts')
-    boolean hostEmail = false
+    boolean hostEmail = true
 
     @Option(names = ['--guestEmail'], description = 'Send first email to guests')
     boolean guestEmail = false
@@ -74,6 +74,7 @@ class RunningDinnerCliCommand implements Runnable {
             log.debug("Pladser: ${hosts.hosts.sum { it.maxGuests }}")
             GuestRandomizer randomizer = GuestRandomizer.randomize(guests, hosts)
             log.debug(mapper.writeValueAsString(randomizer.notAllocated))
+            hosts.notAllocated = randomizer.notAllocated
             ExportImport.exportData(hosts)
         }
 

@@ -80,7 +80,54 @@ class SpreadsheetOutput {
                     }
                 }
             }
-            hosts.hosts.sort { it.vegetar }.each { host ->
+            sheet('Værter') {
+                freeze 1, 1
+                row {
+                    cell {
+                        width 5 cm
+                        value 'Værter'
+                        style { font { style bold } }
+                    }
+                    cell {
+                        width 3 cm
+                        value 'Adresse'
+                        style { font { style bold } }
+                    }
+                    cell {
+                        width 2.5 cm
+                        value 'Telefon'
+                        style { font { style bold } }
+                    }
+                    cell {
+                        width auto
+                        value 'Max gæster'
+                    }
+                    cell {
+                        width auto
+                        value 'Hvidvin og Rødvin'
+                    }
+                }
+                hosts.hosts.sort { it.shortNames }.each { host ->
+                    row {
+                        cell host.shortNames
+                        cell host.hostAddress
+                        cell "${host.guests*.mobile.join(', ')}"
+                        cell host.maxGuests
+                        cell host.maxGuests <= 8 ? 2:3
+                    }
+                }
+                row {
+                    cell()
+                    cell()
+                    cell()
+                    cell(hosts.hosts.sum { it.maxGuests })
+                    cell(hosts.hosts.sum { it.maxGuests <= 8 ? 2 : 3 })
+                }
+
+
+            }
+
+            hosts.hosts.sort { (it.vegetar ? -1 : 0) ?: it.shortNames }.each { host ->
                 sheet("$host.shortNames ${host.vegetar ? '(Vegetar)' : ''}") {
                     row {
                         cell 'Værter'
@@ -132,7 +179,7 @@ class SpreadsheetOutput {
                                 cell {
                                     value "${guest.name}"
                                     style {
-                                        background "${index % 2 ? '#dddddd':'#eeeeee'}"
+                                        background "${index % 2 ? '#dddddd' : '#eeeeee'}"
                                     }
                                 }
                                 cell "${guest.allergy ? guest.hensyn ?: '' : guest.veganer ? 'Veganer' : guest.vegetar ? 'Vegetar' : ''}"
