@@ -10,6 +10,8 @@ import groovy.util.logging.Slf4j
 import io.micronaut.configuration.picocli.PicocliRunner
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
+import running.dinner.data.Hosts
+import running.dinner.email.SendEmail
 import running.dinner.output.SpreadsheetOutput
 import running.dinner.output.WordOutput
 import running.dinner.transfer.ExportImport
@@ -34,6 +36,9 @@ class RunningDinnerCliCommand implements Runnable {
     @Inject
     FlexbilletService fetchDataService
 
+    @Inject
+    SendEmail sendEmail
+
     @Option(names = ['-v', '--verbose'], description = 'Print reg json')
     boolean verbose = true
 
@@ -43,12 +48,15 @@ class RunningDinnerCliCommand implements Runnable {
     @Option(names = ['--hostEmail'], description = 'Send first email to hosts')
     boolean hostEmail = true
 
+    @Option(names = ['--guestEmail'], description = 'Send first email to guests')
+    boolean guestEmail = true
+
     static void main(String[] args) throws Exception {
         PicocliRunner.run(RunningDinnerCliCommand.class, args)
     }
 
     void run() {
-        List<Host> hosts = ExportImport.importData()
+        Hosts hosts = ExportImport.importData()
         if (!hosts) {
 
             log.debug("New data fetch")
@@ -57,8 +65,7 @@ class RunningDinnerCliCommand implements Runnable {
             log.debug("Vegetar: ${data.count { it.allergener == 'Vegetar' }}")
             log.debug("Veganer: ${data.count { it.allergener == 'Veganer' }}")
             log.debug("Allergi: ${data.count { it.allergener == 'Allergier eller andet' }}")
-
-//        if (verbose) {
+            log.debug("Alle   : ${data.size()}")
             GuestProcessor.preprocessGuests(data)
             GuestProcessor.groupSingles(data)
             Map<String, Map<String, List<Map>>> sorted = GuestProcessor.sortGuests(data)
@@ -70,7 +77,7 @@ class RunningDinnerCliCommand implements Runnable {
         }
 
         if (verbose) {
-            hosts.each { host ->
+            hosts.hosts.each { host ->
                 println('-' * 80)
                 println "-- Værter: ${host.shortNames} ${host.vegetar ? " (vegetar) " : ''}"
                 println "-- Til forret: ${host.entreCourseSeats}"
@@ -78,17 +85,25 @@ class RunningDinnerCliCommand implements Runnable {
                 println "-- Til hovedret: ${host.mainCourseSeats}"
                 printCourse(host.mainCourseGuests)
                 println "-- Udbetal ${host.mobilePay ? "til MobilePay: $host.mobilePay" : 'konto'}"
-
             }
         }
         if (map) {
             generateMapData(data)
         }
 
+
+
         if (hostEmail) {
-            hosts.each { host ->
-                println('-' * 80)
-                println MessageTemplates.createHostEmail(host)
+            hosts.hosts.each { host ->
+                sendEmail.simpleMail("Running Dinner", MessageTemplates.createHostEmail(host), *host.guests)
+            }
+
+        }
+        if (guestEmail) {
+            hosts.hosts.each { host ->
+                host.entreCourseGuests.each { guestGroup ->
+                    sendEmail.simpleMail("Running Dinner", MessageTemplates.createGuestMail(host, guestGroup), *guestGroup.guests)
+                }
             }
         }
         SpreadsheetOutput.buildSpreadsheet(hosts)
@@ -96,6 +111,9 @@ class RunningDinnerCliCommand implements Runnable {
         WordOutput.hostEnvelopeWithPostcards(hosts)
         WordOutput.guestsPostcards(hosts)
 
+        // Sanity check
+        log.debug("Entre seats: ${hosts.hosts.sum { it.entreCourseSeats }}")
+        log.debug("Main  seats: ${hosts.hosts.sum { it.mainCourseSeats }}")
     }
 
     void printCourse(List<GuestGroup> guestGroup) {

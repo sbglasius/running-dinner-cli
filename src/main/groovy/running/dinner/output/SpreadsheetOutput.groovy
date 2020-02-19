@@ -3,14 +3,18 @@ package running.dinner.output
 
 import builders.dsl.spreadsheet.builder.poi.PoiSpreadsheetBuilder
 import running.dinner.data.Host
+import running.dinner.data.Hosts
+import running.dinner.transfer.ExportImport
+
+import static running.dinner.transfer.ExportImport.directory
 
 class SpreadsheetOutput {
-    static buildSpreadsheet(List<Host> hosts) {
-        File file = new File('spreadsheet.xlsx')
+    static buildSpreadsheet(Hosts hosts) {
+        File file = new File(directory, 'spreadsheet.xlsx')
         println file.absolutePath
 
         PoiSpreadsheetBuilder.create(file).build {
-            hosts.sort { it.vegetar }.each { host ->
+            hosts.hosts.sort { it.vegetar }.each { host ->
                 sheet("$host.shortNames ${host.vegetar ? '(Vegetar)' : ''}") {
                     row {
                         cell 'Værter'

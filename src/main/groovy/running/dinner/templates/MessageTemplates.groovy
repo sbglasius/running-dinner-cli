@@ -9,19 +9,19 @@ class MessageTemplates {
         String foodNotes = ''
         foodNotes += hensyn(host.entreCourseGuests, 'forretten')
         foodNotes += hensyn(host.mainCourseGuests, 'hovedretten')
-        if(host.entreCourseGuests*.guests.flatten().any { it.veganer }) {
+        if (host.entreCourseGuests*.guests.flatten().any { it.veganer }) {
             foodNotes += 'Til forretten er der en eller flere veganere.\n'
         }
-        if(host.mainCourseGuests*.guests.flatten().any { it.veganer }) {
+        if (host.mainCourseGuests*.guests.flatten().any { it.veganer }) {
             foodNotes += 'Til hovedretten er der en eller flere veganere.\n'
         }
         return """\
             Kære ${host.names}
             
-            Tak fordi I vil være vært til Running Dinner! I er sikkert spændte på, hvem der banker på jeres dør den 7. marts. Den spænding må I holde lidt endnu. Lige nu kan vi kun afsløre, at der kommer ${host.entreCourseSeats} til forret og ${host.mainCourseSeats} til hovedret (inkl. jer selv). I bestemmer selv, hvad I vil servere for jeres gæster${host.vegetar ? ' og vi har noteret at I serverer vegetarisk mad':''}. 
+            Tak fordi I vil være vært til Running Dinner! I er sikkert spændte på, hvem der banker på jeres dør den 7. marts. Den spænding må I holde lidt endnu. Lige nu kan vi kun afsløre, at der kommer ${host.entreCourseSeats} til forret og ${host.mainCourseSeats} til hovedret (inkl. jer selv). I bestemmer selv, hvad I vil servere for jeres gæster${host.vegetar ? ' og vi har noteret at I serverer vegetarisk mad' : ''}. 
 
             ${foodNotes}
-            Vi sørger for, at I får ${[host.entreCourseSeats, host.mainCourseSeats].max() * 125} kr. udbetalt ${host.mobilePay ? "på MobilePay (på mobil nr. ${host.mobilePay})" : "på bankkonto (*)"}, som bidrag til maden. I Byens Egen Butik kan I hente en pose med hvidvin og rødvin til maden sponsoreret af Brugsen.
+            Vi sørger for, at I får ${[host.entreCourseSeats, host.mainCourseSeats].max() * 125} kr. udbetalt ${host.mobilePay ? "på MobilePay (på mobil nr. ${host.mobilePay})" : "på bankkonto (*)"}, som bidrag til maden. I Byens Egen Butik kan I hente en pose med hvidvin og rødvin til maden sponsoreret af Brugsen. Vinen er udvalgt af Henrik.
             
             Her er en tidsplan for aftenen:
             
@@ -55,10 +55,10 @@ class MessageTemplates {
             
             Velkommen til fest!
             
-            På vegne af Brugsens Bestyrelse,
+            De venligste hilsner fra
             
-            Running Dinner udvalget.
-            """.stripIndent()
+            Brugsens Bestyrelses Running Dinner udvalg.
+        """.stripIndent()
     }
 
     private static String hensyn(List<GuestGroup> guestGroups, String ret) {
@@ -66,55 +66,55 @@ class MessageTemplates {
 
         if (guests.any { it.hensyn }) {
             return """Til ${ret} er der bedt om flg. hensyn:
-                ${guests.findAll{ it.hensyn }.collect { "* $it.hensyn" }.join('\n                ')}
+                ${guests.findAll { it.hensyn }.collect { "* $it.hensyn" }.join('\n                ')}
             """
         }
         return ''
     }
 
-//    static String createGæstMail(Vært vært, Deltager deltager) {
-//        """\
-//            Kære ${deltager.navne}
-//
-//            Velkommen til Running Dinner.
-//
-//            Vi har arrangeret en fest, som vi håber, at alle vil tale om længe efter den 2. februar.
-//
-//            En del af aftenen er stadigvæk hemmelig, men på nuværende tidspunkt kan vi afsløre tidsplanen for aftenen:
-//
-//            18:00
-//            Forret hos ${vært.navne} som bor ${vært.adresse}.
-//            Værterne ved IKKE, hvem der kommer, så prøv at hold det hemmeligt.
-//
-//            19:30
-//            Værten åbner en kuvert med et postkort til hver gæst, som fortæller, hvor I skal gå hen til hovedret.
-//
-//            20:00
-//            Ankomst hos ny vært til hovedret.
-//
-//            22:00
-//            Ankomst i Hall of Drums, Horsensvej 38. Servering af desert og kaffe. Fest med bar og DJ
-//
-//            03:00
-//            Festen slutter.
-//
-//            Det er vigtigt, at tidspunkterne for forret og hovedret holdes.
-//
-//            Sponsorer:
-//            Dagli'Brugsen - Byens Egen Butik: Vin til maden
-//            Lyng Dal Hotel og Restaurant: Dessert
-//            Søhøjlandets Kaffe: Kaffe
-//            Hall of Drums: Lokale
-//
-//            Er der spørgsmål, kan de sendes på email til info@runningdinner.nu. Er det nødvendigt at komme i kontakt med værterne, sker det også på ovenstående email.
-//
-//            Velkommen til fest!
-//
-//            De bedste hilsner,
-//            Dagli'Brugsen - Byens Egen Butik, Lyng Dal Hotel og Restaurant,
-//            Søhøjlandets Kaffe og Hall of Drums
-//        """.stripIndent()
-//    }
+
+    static String createGuestMail(Host host, GuestGroup guestGroup) {
+        """\
+            Kære ${guestGroup.shortNames}
+
+            Velkommen til Running Dinner.
+
+            Vi har arrangeret en fest, som vi håber, at alle vil tale om længe efter den 7. marts.
+
+            En del af aftenen er stadigvæk hemmelig, men på nuværende tidspunkt kan vi afsløre tidsplanen for aftenen:
+
+                18:00
+                Forret hos ${host.shortNames} som bor ${host.hostAddress}.
+                Værterne ved IKKE, hvem der kommer, så prøv at hold det hemmeligt.
+    
+                19:30
+                Værten åbner en kuvert med et postkort til hver gæst, som fortæller, hvor I skal gå hen til hovedret.
+    
+                20:00
+                Ankomst hos ny vært til hovedret.
+    
+                22:00
+                Ankomst i hallen på Gl. Rye Skole. Servering af desert og kaffe. Fest med bar og livemusik
+    
+                02:00
+                Festen slutter.
+
+            Det er vigtigt, at tidspunkterne for forret og hovedret holdes.
+
+            Sponsorer:
+            Dagli'Brugsen - Byens Egen Butik: Vin til maden
+            Lyng Dal Hotel og Restaurant: Dessert
+            Søhøjlandets Kaffe: Kaffe
+
+            Er der spørgsmål, kan de sendes på email til info@runningdinner.nu. Er det nødvendigt at komme i kontakt med værterne, sker det også på ovenstående email.
+
+            Velkommen til fest!
+
+            De venligste hilsner fra
+            
+            Brugsens Bestyrelses Running Dinner udvalg.
+        """.stripIndent()
+    }
 
 //    static String createVærtPostkort(Vært vært) {
 //        """\
@@ -170,4 +170,7 @@ class MessageTemplates {
 //
 //        """.stripIndent()
 //    }
+
+    static tidsplan = """\
+             """
 }

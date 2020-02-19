@@ -5,6 +5,7 @@ import groovy.util.logging.Slf4j
 import running.dinner.data.Guest
 import running.dinner.data.GuestGroup
 import running.dinner.data.Host
+import running.dinner.data.Hosts
 
 import java.security.SecureRandom
 
@@ -12,12 +13,12 @@ import java.security.SecureRandom
 @Slf4j
 class GuestRandomizer {
     List<GuestGroup> guestGroups
-    List<Host> hosts
+    Hosts hosts
     Map<String, List<GuestGroup>> notAllocated = [:]
 
     private Random random = new SecureRandom()
 
-    static GuestRandomizer randomize(List<GuestGroup> guestGroups, List<Host> hosts) {
+    static GuestRandomizer randomize(List<GuestGroup> guestGroups, Hosts hosts) {
         new GuestRandomizer(guestGroups, hosts).distributeGuestsOnHosts()
     }
 
@@ -41,7 +42,7 @@ class GuestRandomizer {
     void addGuestToHost(GuestGroup guestGroup, String course, String avoid = null) {
         boolean vegitarianGuests = guestGroup.guests.any { it.vegetar }
         boolean allergeneGuests = guestGroup.guests.any { it.allergy }
-        List<Host> availableHosts = hosts.findAll { Host host ->
+        List<Host> availableHosts = hosts.hosts.findAll { Host host ->
             int guestsInGroup = course == 'entre' ? host.entreCourseSeats : host.mainCourseSeats
             List<GuestGroup> avoidGuests = avoid == 'entre' ?  host.entreCourseGuests : []
             return host.vegetar == vegitarianGuests &&
@@ -50,7 +51,7 @@ class GuestRandomizer {
                     !(guestGroup.any { it in avoidGuests })
         }
         if (!availableHosts) {
-            availableHosts = hosts.findAll { Host host ->
+            availableHosts = hosts.hosts.findAll { Host host ->
                 int guestsInGroup = course == 'entre' ? host.entreCourseSeats : host.mainCourseSeats
                 List<GuestGroup> avoidGuests = avoid == 'entre' ? host.entreCourseGuests : []
                 return guestGroup.size <= (host.maxGuests - guestsInGroup) &&
