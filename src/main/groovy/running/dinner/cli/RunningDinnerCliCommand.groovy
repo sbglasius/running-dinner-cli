@@ -10,19 +10,18 @@ import groovy.util.logging.Slf4j
 import io.micronaut.configuration.picocli.PicocliRunner
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
-import running.dinner.data.Hosts
-import running.dinner.email.SendEmail
-import running.dinner.output.SpreadsheetOutput
-import running.dinner.output.WordOutput
-import running.dinner.transfer.ExportImport
 import running.dinner.data.Guest
 import running.dinner.data.GuestGroup
-import running.dinner.data.Host
+import running.dinner.data.Hosts
+import running.dinner.email.SendEmail
 import running.dinner.flexbillet.FlexbilletService
 import running.dinner.mapper.Mapper
+import running.dinner.output.SpreadsheetOutput
+import running.dinner.output.WordOutput
 import running.dinner.processor.GuestProcessor
 import running.dinner.processor.GuestRandomizer
 import running.dinner.templates.MessageTemplates
+import running.dinner.transfer.ExportImport
 
 import javax.inject.Inject
 import java.time.LocalDateTime
@@ -46,10 +45,13 @@ class RunningDinnerCliCommand implements Runnable {
     boolean map
 
     @Option(names = ['--hostEmail'], description = 'Send first email to hosts')
-    boolean hostEmail = true
+    boolean hostEmail = false
 
     @Option(names = ['--guestEmail'], description = 'Send first email to guests')
     boolean guestEmail = false
+
+    @Option(names = ['--documents'], description = 'Create documents')
+    boolean documents = false
 
     static void main(String[] args) throws Exception {
         PicocliRunner.run(RunningDinnerCliCommand.class, args)
@@ -89,10 +91,9 @@ class RunningDinnerCliCommand implements Runnable {
                 println "-- Udbetal ${host.mobilePay ? "til MobilePay: $host.mobilePay" : 'konto'}"
             }
         }
-        if (map) {
-            generateMapData(data)
+        if (true) {
+            generateMapData(hosts.hosts*.hostAddress)
         }
-
 
 
         if (hostEmail) {
@@ -104,7 +105,7 @@ class RunningDinnerCliCommand implements Runnable {
         if (guestEmail) {
             hosts.hosts.each { host ->
                 host.entreCourseGuests.each { guestGroup ->
-                    if(guestGroup.guests.any { it.single }) {
+                    if (guestGroup.guests.any { it.single }) {
                         guestGroup.guests.each {
                             GuestGroup single = new GuestGroup(guests: [it])
                             sendEmail.simpleMail("Running Dinner", MessageTemplates.createGuestMail(host, single), it)
@@ -116,10 +117,12 @@ class RunningDinnerCliCommand implements Runnable {
                 }
             }
         }
-        SpreadsheetOutput.buildSpreadsheet(hosts)
-        WordOutput.hostWineInformation(hosts)
-        WordOutput.hostEnvelopeWithPostcards(hosts)
-        WordOutput.guestsPostcards(hosts)
+        if (documents) {
+            SpreadsheetOutput.buildSpreadsheet(hosts)
+            WordOutput.hostWineInformation(hosts)
+            WordOutput.hostEnvelopeWithPostcards(hosts)
+            WordOutput.guestsPostcards(hosts)
+        }
 
         // Sanity check
         log.debug("Entre seats: ${hosts.hosts.sum { it.entreCourseSeats }}")
@@ -139,17 +142,9 @@ class RunningDinnerCliCommand implements Runnable {
         }
     }
 
-    void generateMapData(List<Map> data) {
-        List<String> adresses = data.collect {
-            String address = it.adresse
-            if (!(address ==~ /.*\d{4}.*/)) {
-                address += ', 8680 Ry'
-            }
-            return "${address.toLowerCase()}" as String
-        }.unique()
-
-        adresses.each {
-            log.debug it
+    void generateMapData(List<String> adresses) {
+        adresses.unique().each {
+            println "${it - 'Gl. Rye'} Gammel Rye, 8680 Ry"
         }
     }
 

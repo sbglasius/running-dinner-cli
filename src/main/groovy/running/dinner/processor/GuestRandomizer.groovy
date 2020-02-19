@@ -2,7 +2,6 @@ package running.dinner.processor
 
 import groovy.transform.TupleConstructor
 import groovy.util.logging.Slf4j
-import running.dinner.data.Guest
 import running.dinner.data.GuestGroup
 import running.dinner.data.Host
 import running.dinner.data.Hosts

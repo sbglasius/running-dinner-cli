@@ -1,11 +1,9 @@
 package running.dinner.output
 
-
 import builders.dsl.spreadsheet.builder.poi.PoiSpreadsheetBuilder
 import running.dinner.data.GuestGroup
 import running.dinner.data.Host
 import running.dinner.data.Hosts
-import running.dinner.transfer.ExportImport
 
 import static running.dinner.transfer.ExportImport.directory
 

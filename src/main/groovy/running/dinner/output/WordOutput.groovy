@@ -3,7 +3,6 @@ package running.dinner.output
 import com.craigburke.document.builder.WordDocumentBuilder
 import running.dinner.data.Host
 import running.dinner.data.Hosts
-import running.dinner.transfer.ExportImport
 
 import static running.dinner.transfer.ExportImport.directory
 
@@ -31,6 +30,46 @@ class WordOutput {
                     paragraph "Vi håber, I får en fantastisk aften!"
                     greeting.call()
                     pageBreak()
+                    paragraph "Tidsplan for festen.", style: 'bold'
+                    paragraph()
+                    table(border: [size: 0], padding: 3.px, columns: [1, 9]) {
+                        row {
+                            cell "18:00", align: 'right', font : [family: 'DejaVu Sans Mono']
+                            cell "Første hold gæster kommer til forret."
+                        }
+                        row {
+                            cell "19:30", align: 'right', font: [family: 'DejaVu Sans Mono']
+                            cell """\
+                                Åbn den kuvert, som I modtager sammen med vinen fra Brugsen.
+                                Giv hver gæst deres postkort, som fortæller, hvor de skal gå hen til hovedretten. 
+                                Sig pænt farvel og gør klar til næste ryk ind.""".stripIndent()
+                        }
+                        row {
+                            cell "20:00", align: 'right', font: [family: 'DejaVu Sans Mono']
+                            cell "Andet hold gæster kommer til hovedret."
+                        }
+                        row {
+                            cell "21:30", align: 'right', font: [family: 'DejaVu Sans Mono']
+                            cell "Nu er det så småt tid til at afslutte hovedretten og bevæge sig op i hallen på Gl. Rye Skole."
+                        }
+                        row {
+                            cell "22:00", align: 'right', font: [family: 'DejaVu Sans Mono']
+                            cell "Ankomst i hallen på Gl. Rye Skole. Servering af desert og kaffe. Fest med bar og livemusik."
+                        }
+                        row {
+                            cell "02:00", align: 'right', font: [family: 'DejaVu Sans Mono']
+                            cell "Festen slutter!"
+                        }
+                    }
+                    paragraph('Det er vigtigt, at tidspunkterne for forret og hovedret holdes.')
+                    paragraph()
+                    paragraph('Sponsorer:')
+                    paragraph("Dagli'Brugsen - Byens Egen Butik: Vin til maden")
+                    paragraph("Lyng Dal Hotel og Restaurant: Dessert")
+                    paragraph("Søhøjlandets Kaffe: Kaffe")
+                    greeting.call()
+                    pageBreak()
+
                 }
             }
         }
@@ -129,11 +168,11 @@ class WordOutput {
         'paragraph.bold'([font: [bold: true]])
     }
 
-    private static Map a4Args = [template: a4Template, size: 'a4', orientation: 'landscape',]
+    private static Map a4Args = [template: a4Template, size: 'a4']
 
     private static Closure greeting = { ->
-        paragraph "Med venlig hilsen"
-        paragraph "Brugsens Bestyrelse"
+        paragraph "De venligste hilsner"
+        paragraph "Brugsens Bestyrelses Running Dinner udvalg"
 
     }
 

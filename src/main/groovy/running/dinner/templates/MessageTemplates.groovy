@@ -23,7 +23,7 @@ class MessageTemplates {
             ${foodNotes}
             Vi sørger for, at I får ${[host.entreCourseSeats, host.mainCourseSeats].max() * 125} kr. udbetalt ${host.mobilePay ? "på MobilePay (på mobil nr. ${host.mobilePay})" : "på bankkonto (*)"}, som bidrag til maden. Vi opfordrer til, at alle indkøb til festen foretages i Byens Egen Butik.
             
-            Fra den 1. marts kan der i Byens Egen Butik hentes hvidvin og rødvin til maden, udvangt af Henrik og  sponsoreret af Brugsen. Her får I også udleveret en kuvert som først skal åbnes efter forretten den 7. marts.
+            Fra den 1. marts kan der i Byens Egen Butik hentes hvidvin og rødvin til maden, udvalgt af Henrik og  sponsoreret af Brugsen. Her får I også udleveret en kuvert som først skal åbnes efter forretten.
             
             Her er en tidsplan for den 7. marts:
             
