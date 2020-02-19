@@ -27,7 +27,7 @@ class Mapper {
             List<Guest> guests = mapGuestsInGroup(hostsInGroup)
             boolean useMobilePay = host.mobilePayOK
             String mobilePay = host.mobilePayNummer
-            return new Host(guests, max, address - ', Gl. Rye, 8680 Ry', useMobilePay ? mobilePay : null, serves, foodDescription, allergenes)
+            return new Host(guests, max, address - ', 8680 Ry', useMobilePay ? mobilePay : null, serves, foodDescription, allergenes)
         }
         return new Hosts(hosts: allHosts)
     }
@@ -35,7 +35,7 @@ class Mapper {
     private static List<Guest> mapGuestsInGroup(List<Map> guestsInGroup) {
         try {
             return guestsInGroup.collect {
-                new Guest(it.navn as String, it.mobil as String, it.email as String, it.adresse, it.allergener, it.hensyn)
+                new Guest(it.navn as String, it.mobil as String, it.email as String, it.adresse, it.allergener, it.hensyn, it.single ?: false)
             }
         } catch (e) {
             println guestsInGroup

@@ -13,6 +13,8 @@ class Guest {
     String allergener
     String hensyn
 
+    boolean single = false
+
     @JsonIgnore
     boolean getVegetar() {
         allergener == 'Vegetar' || allergener == 'Veganer'

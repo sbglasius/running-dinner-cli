@@ -40,16 +40,16 @@ class RunningDinnerCliCommand implements Runnable {
     SendEmail sendEmail
 
     @Option(names = ['-v', '--verbose'], description = 'Print reg json')
-    boolean verbose = true
+    boolean verbose = false
 
     @Option(names = ['-m', '--map'], description = 'Generate map data')
     boolean map
 
     @Option(names = ['--hostEmail'], description = 'Send first email to hosts')
-    boolean hostEmail = true
+    boolean hostEmail = false
 
     @Option(names = ['--guestEmail'], description = 'Send first email to guests')
-    boolean guestEmail = true
+    boolean guestEmail = false
 
     static void main(String[] args) throws Exception {
         PicocliRunner.run(RunningDinnerCliCommand.class, args)
@@ -71,6 +71,7 @@ class RunningDinnerCliCommand implements Runnable {
             Map<String, Map<String, List<Map>>> sorted = GuestProcessor.sortGuests(data)
             List<GuestGroup> guests = Mapper.mapGuests(sorted['guests'])
             hosts = Mapper.mapHosts(sorted['hosts'])
+            log.debug("Pladser: ${hosts.hosts.sum { it.maxGuests }}")
             GuestRandomizer randomizer = GuestRandomizer.randomize(guests, hosts)
             log.debug(mapper.writeValueAsString(randomizer.notAllocated))
             ExportImport.exportData(hosts)
@@ -79,7 +80,7 @@ class RunningDinnerCliCommand implements Runnable {
         if (verbose) {
             hosts.hosts.each { host ->
                 println('-' * 80)
-                println "-- Værter: ${host.shortNames} ${host.vegetar ? " (vegetar) " : ''}"
+                println "-- Værter: ${host.shortNames} ${host.vegetar ? " (vegetar) " : ''} : ${host.maxGuests}"
                 println "-- Til forret: ${host.entreCourseSeats}"
                 printCourse(host.entreCourseGuests)
                 println "-- Til hovedret: ${host.mainCourseSeats}"
@@ -102,7 +103,15 @@ class RunningDinnerCliCommand implements Runnable {
         if (guestEmail) {
             hosts.hosts.each { host ->
                 host.entreCourseGuests.each { guestGroup ->
-                    sendEmail.simpleMail("Running Dinner", MessageTemplates.createGuestMail(host, guestGroup), *guestGroup.guests)
+                    if(guestGroup.guests.any { it.single }) {
+                        guestGroup.guests.each {
+                            GuestGroup single = new GuestGroup(guests: [it])
+                            sendEmail.simpleMail("Running Dinner", MessageTemplates.createGuestMail(host, single), it)
+                        }
+                    } else {
+                        sendEmail.simpleMail("Running Dinner", MessageTemplates.createGuestMail(host, guestGroup), *guestGroup.guests)
+
+                    }
                 }
             }
         }

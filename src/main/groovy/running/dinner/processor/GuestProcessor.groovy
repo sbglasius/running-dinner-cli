@@ -10,11 +10,13 @@ class GuestProcessor {
     ]
 
     static Map<String, Map<String, List<Map>>> sortGuests(List<Map> unsorted) {
-        unsorted.groupBy { it.maxGaester ? 'hosts' : 'guests' }
-                .collectEntries { String key, List<Map> guests ->
-                    Map groupedGuests = guests.groupBy { it.koebsref }
-                    [key, groupedGuests]
-                } as Map<String, Map<String, List<Map>>>
+
+        def groupedGuests = unsorted.groupBy { it.koebsref }
+        return groupedGuests.groupBy { ref, guests ->
+            return guests.any { it.maxGaester } ? 'hosts' : 'guests'
+        } as Map<String, Map<String, List<Map>>>
+
+
     }
 
     /**
@@ -31,8 +33,8 @@ class GuestProcessor {
     }
 
     static void groupSingles(List<Map> guests) {
-        List<Map> singles = guests.groupBy { it.koebsref }.findAll { it.value.size() == 1 }.collect { it.value }.flatten()
-        List<Map> singlesVegetar = singles.findAll { it.test }
+        List<Map> singles = guests.groupBy { it.koebsref }.findAll { it.value.size() == 1 }.collect { it.value }.flatten() as List<Map>
+        singles.each { it.single = true }
         shuffleSingles(singles)
     }
 

@@ -27,7 +27,7 @@ class GuestGroup {
             } else {
             return it}
         }
-        return "${noLastNames[0..-2].join(', ')} og ${names[-1]}"
+        return noLastNames.size() > 1 ?  "${noLastNames[0..-2].join(', ')} og ${names[-1]}" : names[0]
     }
 
     @JsonIgnore
