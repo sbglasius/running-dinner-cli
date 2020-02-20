@@ -1,5 +1,6 @@
 package running.dinner.email
 
+import groovy.util.logging.Slf4j
 import running.dinner.data.Guest
 
 import javax.inject.Singleton
@@ -11,6 +12,7 @@ import javax.mail.internet.InternetAddress
 import javax.mail.internet.MimeMessage
 
 @Singleton
+@Slf4j
 class SendEmail {
 
     Session session
@@ -19,7 +21,10 @@ class SendEmail {
     Properties props
 
     InternetAddress fromAddress
+
     SendEmail() {
+//        File config = new File('/home/sbglasius/.groovy/running-dinner.properties')
+
         File config = new File('/home/sbglasius/projects/running-dinner/running-dinner-cli/docker/greenmail.properties')
 
         props = System.getProperties()
@@ -43,21 +48,22 @@ class SendEmail {
 
 
     void simpleMail(String subject, String body, Guest... to) throws Exception {
-//        File config = new File('/home/sbglasius/.groovy/running-dinner.properties')
         MimeMessage message = new MimeMessage(session)
         message.setFrom(fromAddress)
         message.setReplyTo([fromAddress] as Address[])
 
         // Override email adresse.
-        //to = "soeren+running-dinner@glasius.dk"
+//        to = [new Guest("Søren", "40449188", "soeren+running-dinner@glasius.dk")]
         to.each {
             InternetAddress toAddress = new InternetAddress(it.email, it.name)
 
             message.addRecipient(Message.RecipientType.TO, toAddress)
         }
-//        message.addRecipient(Message.RecipientType.BCC, new InternetAddress('info@runningdinner.nu'))
+        log.debug "Sender email til ${to*.name.join(' og ')}"
+        message.addRecipient(Message.RecipientType.BCC, new InternetAddress('info@runningdinner.nu', "Running Dinner"))
         message.setSubject(subject)
         message.setText(body)
+        sleep(75)
 
         transport.sendMessage(message, message.getAllRecipients())
     }

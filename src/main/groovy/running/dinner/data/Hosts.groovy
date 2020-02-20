@@ -23,4 +23,10 @@ class Hosts {
     List<GuestGroup> getAllGuests() {
         hosts*.entreCourseGuests.flatten().sort { it.shortNames } as List<GuestGroup>
     }
+
+    @JsonIgnore
+    List<GuestGroup> getEverybody() {
+        def x = (hosts.collect() + hosts*.entreCourseGuests.collect().flatten())
+                return x.flatten().sort { it.shortNames } as List<GuestGroup>
+    }
 }

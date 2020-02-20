@@ -44,6 +44,9 @@ class RunningDinnerCliCommand implements Runnable {
     @Option(names = ['-m', '--map'], description = 'Generate map data')
     boolean map
 
+    @Option(names = ['--teaserEmail'], description = 'Send teaser email to everybody')
+    boolean teaserEmail = true
+
     @Option(names = ['--hostEmail'], description = 'Send first email to hosts')
     boolean hostEmail = false
 
@@ -51,7 +54,7 @@ class RunningDinnerCliCommand implements Runnable {
     boolean guestEmail = false
 
     @Option(names = ['--documents'], description = 'Create documents')
-    boolean documents = false
+    boolean documents = true
 
     static void main(String[] args) throws Exception {
         PicocliRunner.run(RunningDinnerCliCommand.class, args)
@@ -96,6 +99,12 @@ class RunningDinnerCliCommand implements Runnable {
         }
 
 
+        if (teaserEmail) {
+            hosts.everybody.each { guestGroup ->
+                sendEmail.simpleMail("Running Dinner", MessageTemplates.createTeaserMail(guestGroup), *guestGroup.guests)
+            }
+
+        }
         if (hostEmail) {
             hosts.hosts.each { host ->
                 sendEmail.simpleMail("Running Dinner", MessageTemplates.createHostEmail(host), *host.guests)

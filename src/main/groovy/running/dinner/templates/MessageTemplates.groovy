@@ -56,10 +56,7 @@ class MessageTemplates {
             
             Velkommen til fest!
             
-            De venligste hilsner fra
-            
-            Brugsens Bestyrelses Running Dinner udvalg.
-        """.stripIndent()
+        """.stripIndent()+greeting
     }
 
     private static String hensyn(List<GuestGroup> guestGroups, String ret) {
@@ -111,9 +108,42 @@ class MessageTemplates {
 
             Velkommen til fest!
 
+        """.stripIndent()+greeting
+    }
+
+    static String createTeaserMail(GuestGroup guestGroup) {
+        """\
+            Kære ${guestGroup.shortNames}
+
+            Nu skal vi snart feste sammen! Der er 299 tilmeldte og værter nok til alle. WOW!
+
+            Musikken er bestilt. Det bliver Dansefeber, der spiller op! 
+
+            Lige nu har vi travlt med at få de sidste detaljer på plads. I den kommende uge vil ${guestGroup.size == 1 ? 'du' : 'I'} modtage mere information på email.
+
+            Lige nu skal I bare glæde jer!
+            
+            Er der spørgsmål, kan de sendes på email til info@runningdinner.nu.
+
+            Husk at sende en varm tanke til vores sponsorer:
+            - Dagli'Brugsen - Byens Egen Butik: Vin til maden
+            - Lyng Dal Hotel og Restaurant: Dessert
+            - Søhøjlandets Kaffe: Kaffe
+
+            Også en stor tak til:
+            - Skolebestyrelsen på Gl. Rye Skole: For at stille hallen til rådighed.
+            - Gl. Ryes Borgerforening: For Mobile Pay til festen.
+            - Initiativgruppen af 99: For hjælp til pyntning af hallen.
+
+        """.stripIndent()+greeting
+    }
+
+    private static String getGreeting() {
+        """\
             De venligste hilsner fra
             
-            Brugsens Bestyrelses Running Dinner udvalg.
+            Running Dinner udvalget i
+            Brugsens Bestyrelse.
         """.stripIndent()
     }
 }
