@@ -129,8 +129,8 @@ class SpreadsheetOutput {
                         cell host.entreCourseSeats
                         cell host.mainCourseSeats
                         cell host.maxGuests
-                        cell host.maxGuests <= 8 ? 2:3
-                        cell ([host.entreCourseSeats, host.mainCourseSeats].max() * 125)
+                        cell host.maxGuests <= 8 ? 2 : 3
+                        cell([host.entreCourseSeats, host.mainCourseSeats].max() * 125)
                         cell host.mobilePay ?: 'konto'
                     }
                 }
@@ -236,4 +236,35 @@ class SpreadsheetOutput {
         }
     }
 
+    static buildAddresses(Hosts hosts) {
+        File file = new File(directory, 'adresser.xlsx')
+        println file.absolutePath
+
+        PoiSpreadsheetBuilder.create(file).build {
+            sheet('Adresser') {
+                freeze(0, 1)
+                row {
+                    cell {
+                        value 'Værter'
+                    }
+                    cell {
+                        value 'Navn'
+                    }
+                    cell {
+                        value 'Adresse'
+                    }
+                }
+                hosts.hosts.sort { it.shortNames }.each { host ->
+                    row {
+                        cell {
+                            value 'Værter'
+                        }
+                        cell host.shortNames
+                        cell "${host.hostAddress - ', Gl. Rye' + ', Gammel Rye, 8680 Ry'}"
+                    }
+
+                }
+            }
+        }
+    }
 }
