@@ -92,17 +92,33 @@ class SpreadsheetOutput {
                         style { font { style bold } }
                     }
                     cell {
-                        width 2.5 cm
+                        width 2 cm
                         value 'Telefon'
                         style { font { style bold } }
                     }
                     cell {
-                        width auto
+                        width 1 cm
+                        value 'Forret'
+                    }
+                    cell {
+                        width 1 cm
+                        value 'Hovedret'
+                    }
+                    cell {
+                        width 1 cm
                         value 'Max gæster'
                     }
                     cell {
-                        width auto
+                        width 1 cm
                         value 'Hvidvin og Rødvin'
+                    }
+                    cell {
+                        width 1 cm
+                        value 'Udbetaling'
+                    }
+                    cell {
+                        width 1 cm
+                        value "Mobile Pay nr"
                     }
                 }
                 hosts.hosts.sort { it.shortNames }.each { host ->
@@ -110,16 +126,23 @@ class SpreadsheetOutput {
                         cell host.shortNames
                         cell host.hostAddress
                         cell "${host.guests*.mobile.join(', ')}"
+                        cell host.entreCourseSeats
+                        cell host.mainCourseSeats
                         cell host.maxGuests
                         cell host.maxGuests <= 8 ? 2:3
+                        cell ([host.entreCourseSeats, host.mainCourseSeats].max() * 125)
+                        cell host.mobilePay ?: 'konto'
                     }
                 }
                 row {
                     cell()
                     cell()
                     cell()
+                    cell(hosts.hosts.sum { it.entreCourseSeats })
+                    cell(hosts.hosts.sum { it.mainCourseSeats })
                     cell(hosts.hosts.sum { it.maxGuests })
                     cell(hosts.hosts.sum { it.maxGuests <= 8 ? 2 : 3 })
+                    cell(hosts.hosts.sum { [it.entreCourseSeats, it.mainCourseSeats].max() * 125 })
                 }
 
 
@@ -180,7 +203,7 @@ class SpreadsheetOutput {
                                         background "${index % 2 ? '#dddddd' : '#eeeeee'}"
                                     }
                                 }
-                                cell "${guest.allergy ? guest.hensyn ?: '' : guest.veganer ? 'Veganer' : guest.vegetar ? 'Vegetar' : ''}"
+                                cell "${[(guest.single ? 'Single' : null), (guest.allergy ? guest.hensyn : guest.veganer ? 'Veganer' : guest.vegetar ? 'Vegetar' : null)].findAll().join(', ')}"
                             }
                         }
                     }
@@ -203,7 +226,7 @@ class SpreadsheetOutput {
                                         background "${index % 2 ? '#dddddd' : '#eeeeee'}"
                                     }
                                 }
-                                cell "${guest.allergy ? guest.hensyn : guest.veganer ? 'Veganer' : guest.vegetar ? 'Vegetar' : ''}"
+                                cell "${[(guest.single ? 'Single' : null), (guest.allergy ? guest.hensyn : guest.veganer ? 'Veganer' : guest.vegetar ? 'Vegetar' : null)].findAll().join(', ')}"
                             }
                         }
                     }
