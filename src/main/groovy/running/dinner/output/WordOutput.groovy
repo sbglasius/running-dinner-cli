@@ -20,53 +20,58 @@ class WordOutput {
                 hosts.hosts.each { host ->
                     paragraph "Kære $host.shortNames", style: 'bold'
                     paragraph {
-                        text "${host.hostAddress}"
+                        text "${host.hostAddress - ', Gl. Rye'}"
                         lineBreak()
                         text "Gl. Rye"
                     }
                     paragraph "Endnu engang tak fordi I vil være vært ved Running Dinner. Vi håber, det bliver en fest, der bliver talt om længe efter 7. marts."
-                    paragraph "Her er vinen til forret og hovedret. Den er sponsoreret af Dagli'Brugsen - Byens Egen Butik.  Husk at det resterende indkøb til middagen med fordel kan gøres her i butikken."
-                    paragraph "Vedlagt er endnu en kuvert. Den må først åbnes den 7. marts når forretten er spist!"
+                    paragraph "Her er vinen til forret og hovedret. Den er sponsoreret af Dagli'Brugsen - Byens Egen Butik.  Husk at det resterende indkøb til middagen med fordel kan gøres her i butikken. Det vil vi sætte stor pris på."
+                    paragraph "Vedlagt er endnu en kuvert. Den må først åbnes den 7. marts, når forretten er spist!"
                     paragraph "Vi håber, I får en fantastisk aften!"
                     greeting.call()
                     pageBreak()
                     paragraph "Tidsplan for festen.", style: 'bold'
-                    paragraph()
-                    table(border: [size: 0], padding: 3.px, columns: [1, 9]) {
+                    table(border: [size: 0], padding: 2.px, columns: [1.1, 9]) {
                         row {
-                            cell "18:00", align: 'right', font : [family: 'DejaVu Sans Mono']
+                            cell "18:00", font : [family: 'Noto Mono']
                             cell "Første hold gæster kommer til forret."
                         }
                         row {
-                            cell "19:30", align: 'right', font: [family: 'DejaVu Sans Mono']
+                            cell "19:30", font: [family: 'Noto Mono']
                             cell """\
-                                Åbn den kuvert, som I modtager sammen med vinen fra Brugsen.
+                                Åbn den kuvert, som I modtog sammen med vinen fra Brugsen.
                                 Giv hver gæst deres postkort, som fortæller, hvor de skal gå hen til hovedretten. 
                                 Sig pænt farvel og gør klar til næste ryk ind.""".stripIndent()
                         }
                         row {
-                            cell "20:00", align: 'right', font: [family: 'DejaVu Sans Mono']
+                            cell "20:00", font: [family: 'Noto Mono']
                             cell "Andet hold gæster kommer til hovedret."
                         }
                         row {
-                            cell "21:30", align: 'right', font: [family: 'DejaVu Sans Mono']
-                            cell "Nu er det så småt tid til at afslutte hovedretten og bevæge sig op i hallen på Gl. Rye Skole."
+                            cell "21:30", font: [family: 'Noto Mono']
+                            cell "Nu er det så småt tid til at afslutte hovedretten og bevæge sig op i hallen på Gl. Rye Skole, hvor festen fortsætter."
                         }
                         row {
-                            cell "22:00", align: 'right', font: [family: 'DejaVu Sans Mono']
-                            cell "Ankomst i hallen på Gl. Rye Skole. Servering af desert og kaffe. Fest med bar og livemusik."
+                            cell "22:00", font: [family: 'Noto Mono']
+                            cell """\
+                                Servering af dessert lavet af Lyng Dal og kaffe, som er ristet og brygget Søhøjlandets Kaffe. 
+                                Fest med bar og livemusik fra Dansefeber.""".stripIndent()
                         }
                         row {
-                            cell "02:00", align: 'right', font: [family: 'DejaVu Sans Mono']
+                            cell "02:00", font: [family: 'Noto Mono']
                             cell "Festen slutter!"
                         }
                     }
-                    paragraph('Det er vigtigt, at tidspunkterne for forret og hovedret holdes.')
+                    paragraph 'Det er vigtigt, at tidspunkterne for forret og hovedret holdes.'
                     paragraph()
-                    paragraph('Sponsorer:')
-                    paragraph("Dagli'Brugsen - Byens Egen Butik: Vin til maden")
-                    paragraph("Lyng Dal Hotel og Restaurant: Dessert")
-                    paragraph("Søhøjlandets Kaffe: Kaffe")
+                    paragraph 'Husk at sende en varm tanke til vores sponsorer:'
+                    paragraph {
+                        text "- Dagli'Brugsen - Byens Egen Butik: Vin til maden"
+                        lineBreak()
+                        text("- Lyng Dal Hotel og Restaurant: Dessert")
+                        lineBreak()
+                        text("- Søhøjlandets Kaffe: Kaffe")
+                    }
                     greeting.call()
                     pageBreak()
 
@@ -88,7 +93,7 @@ class WordOutput {
                     paragraph "Kære $host.shortNames", style: 'bold'
                     paragraph "Denne kuvert må først åbnes den 7. marts kl. 19:30. ", style: 'bold'
                     paragraph "Den indeholder et postkort til hver af jeres gæster, som fortæller dem, hvem de skal besøge til hovedretten."
-                    paragraph "Fortsat god fest!"
+                    paragraph "Vi håber I får en god aften sammen med jeres gæster!"
                     greeting.call()
                     pageBreak()
                 }
@@ -111,7 +116,7 @@ class WordOutput {
                         text "Endnu engang tusind tak fordi I er værter til dette års Running Dinner. "
                         text "Uden jer, ingen fest!", style: 'bold'
                     }
-                    paragraph "I skal nu sige farvel til jeres forretsgæster og sende dem afsted med hver sit postkort. "
+                    paragraph "I skal nu sige farvel til jeres forretsgæster og sende dem afsted med hvert sit postkort. "
                     paragraph "Det er vigtigt, at I får dem videre, så I kan være klar til jeres hovedretsgæster kl. 20:00. De er nemlig allerede på vej!"
                     paragraph "Fortsat god fest!"
                     greeting.call()
@@ -131,7 +136,7 @@ class WordOutput {
                             text ", som vil servere hovedretten. Adressen er"
                             text " ${nextHost.hostAddress}.", style: 'bold'
                         }
-                        paragraph "For at holde tidsplanen skal I være der senest kl. 20. De andre gæster skal besøge nogle andre værter, men I mødes igen i hallen på Gl. Rye Skole kl. 22."
+                        paragraph "For at holde tidsplanen, skal I være der senest kl. 20. De andre gæster skal besøge nogle andre værter, men I mødes igen i hallen på Gl. Rye Skole kl. 22."
                         paragraph "Fortsat god fest!"
                         greeting.call()
                         pageBreak()
@@ -146,7 +151,7 @@ class WordOutput {
 
     private static a6Template = {
         'document'([margin: [top: 1.cm, left: 1.cm, right: 1.cm, bottom: 1.cm], font: [family: 'Montserrat Medium', color: '#000000', size: 9.pt]])
-        'paragraph'([margin: [top: 0, bottom: 4]])
+        'paragraph'([margin: [top: 0, bottom: 5]])
         'paragraph.bold'([font: [bold: true]])
         'text.bold'([font: [bold: true]])
         'paragraph.silent'(font: [size: 7.pt, color: '#999999'], margin: [top: 0, bottom: 0])
@@ -171,11 +176,18 @@ class WordOutput {
     private static Map a4Args = [template: a4Template, size: 'a4']
 
     private static Closure greeting = { ->
-        paragraph "De venligste hilsner"
-        paragraph "Brugsens Bestyrelses Running Dinner udvalg"
+        paragraph "De venligste hilsner fra"
+        paragraph {
+            text "Running Dinner udvalget i"
+            lineBreak()
+            text "Brugsens Bestyrelse"
+        }
 
     }
-
+//De venligste hilsner fra
+//
+//
+//            Brugsens Bestyrelse.
     private static Closure footer(int width = 150) {
         return { info ->
             table(border: [size: 0], padding: 1.px) {

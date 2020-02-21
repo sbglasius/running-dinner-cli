@@ -45,7 +45,7 @@ class RunningDinnerCliCommand implements Runnable {
     boolean map
 
     @Option(names = ['--teaserEmail'], description = 'Send teaser email to everybody')
-    boolean teaserEmail = true
+    boolean teaserEmail = false
 
     @Option(names = ['--hostEmail'], description = 'Send first email to hosts')
     boolean hostEmail = false
@@ -100,7 +100,7 @@ class RunningDinnerCliCommand implements Runnable {
 
 
         if (teaserEmail) {
-            hosts.everybody.each { guestGroup ->
+            hosts.everybody.takeRight(3).each { guestGroup ->
                 sendEmail.simpleMail("Running Dinner", MessageTemplates.createTeaserMail(guestGroup), *guestGroup.guests)
             }
 

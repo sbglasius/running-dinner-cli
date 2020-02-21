@@ -39,21 +39,25 @@ class MessageTemplates {
                 Andet hold gæster kommer til hovedret.
                 
                 22:00 
-                Ankomst i hallen på Gl. Rye Skole. Servering af desert og kaffe. Fest med bar og livemusik.
+                Ankomst i hallen på Gl. Rye Skole. Servering af desert og kaffe. Fest med bar og livemusik fra Dansefeber.
                 
                 02:00 
                 Festen slutter. 
             
             Det er vigtigt, at tidspunkterne for forret og hovedret holdes.
-            
-            
-            Sponsorer:
-            Dagli'Brugsen - Byens Egen Butik: Vin til maden
-            Lyng Dal Hotel og Restaurant: Dessert
-            Søhøjlandets Kaffe: Kaffe
-            
+                       
             ${!host.mobilePay ? '*) Send registrerings- og kontonummer til info@runningdinner.nu - kan også bruges, hvis der er andre spørgsmål.' : 'Er der spørgsmål, kan de sendes på email til info@runningdinner.nu'}
             
+            Husk at sende en varm tanke til vores sponsorer:
+            - Dagli'Brugsen - Byens Egen Butik: Vin til maden
+            - Lyng Dal Hotel og Restaurant: Dessert
+            - Søhøjlandets Kaffe: Kaffe
+
+            Også en stor tak til:
+            - Skolebestyrelsen på Gl. Rye Skole: For at stille hallen til rådighed.
+            - Gl. Ryes Borgerforening: For Mobile Pay til festen.
+            - Initiativgruppen af 99: For hjælp til pyntning af hallen.
+
             Velkommen til fest!
             
         """.stripIndent()+greeting
@@ -92,19 +96,24 @@ class MessageTemplates {
                 Ankomst hos ny vært til hovedret.
     
                 22:00
-                Ankomst i hallen på Gl. Rye Skole. Servering af desert og kaffe. Fest med bar og livemusik
+                Ankomst i hallen på Gl. Rye Skole. Servering af desert og kaffe. Fest med bar og livemusik fra Dansefeber
     
                 02:00
                 Festen slutter.
 
             Det er vigtigt, at tidspunkterne for forret og hovedret holdes.
 
-            Sponsorer:
-            Dagli'Brugsen - Byens Egen Butik: Vin til maden
-            Lyng Dal Hotel og Restaurant: Dessert
-            Søhøjlandets Kaffe: Kaffe
-
             Er der spørgsmål, kan de sendes på email til info@runningdinner.nu. Er det nødvendigt at komme i kontakt med værterne, sker det også på ovenstående email.
+
+            Husk at sende en varm tanke til vores sponsorer:
+            - Dagli'Brugsen - Byens Egen Butik: Vin til maden
+            - Lyng Dal Hotel og Restaurant: Dessert
+            - Søhøjlandets Kaffe: Kaffe
+
+            Også en stor tak til:
+            - Skolebestyrelsen på Gl. Rye Skole: For at stille hallen til rådighed.
+            - Gl. Ryes Borgerforening: For Mobile Pay til festen.
+            - Initiativgruppen af 99: For hjælp til pyntning af hallen.
 
             Velkommen til fest!
 
