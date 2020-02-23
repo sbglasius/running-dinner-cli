@@ -42,7 +42,7 @@ class RunningDinnerCliCommand implements Runnable {
     boolean verbose = false
 
     @Option(names = ['-m', '--map'], description = 'Generate map data')
-    boolean map = true
+    boolean map = false
 
     @Option(names = ['--teaserEmail'], description = 'Send teaser email to everybody')
     boolean teaserEmail = false
@@ -54,7 +54,7 @@ class RunningDinnerCliCommand implements Runnable {
     boolean guestEmail = false
 
     @Option(names = ['--documents'], description = 'Create documents')
-    boolean documents = false
+    boolean documents = true
 
     static void main(String[] args) throws Exception {
         PicocliRunner.run(RunningDinnerCliCommand.class, args)

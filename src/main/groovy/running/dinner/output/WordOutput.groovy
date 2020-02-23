@@ -13,7 +13,7 @@ class WordOutput {
 
         WordDocumentBuilder wordBuilder = new WordDocumentBuilder(new File(directory, 'vin-information.docx'))
         greeting.delegate = wordBuilder
-        Closure footer = footer()
+        Closure footer = footer(sponsors: 'Husk i øvrigt at sende en varm tanke til sponsorene:')
         footer.delegate = wordBuilder
         wordBuilder.create {
             document(a4Args + [footer: footer]) {
@@ -24,7 +24,7 @@ class WordOutput {
                         lineBreak()
                         text "Gl. Rye"
                     }
-                    paragraph "Endnu engang tak fordi I vil være vært ved Running Dinner. Vi håber, det bliver en fest, der bliver talt om længe efter 7. marts."
+                    paragraph "Endnu engang tak fordi I vil være værter ved Running Dinner. Vi håber, det bliver en fest, der bliver talt om længe efter 7. marts."
                     paragraph "Her er vinen til forret og hovedret. Den er sponsoreret af Dagli'Brugsen - Byens Egen Butik.  Husk at det resterende indkøb til middagen med fordel kan gøres her i butikken. Det vil vi sætte stor pris på."
                     paragraph "Vedlagt er endnu en kuvert. Den må først åbnes den 7. marts, når forretten er spist!"
                     paragraph "Vi håber, I får en fantastisk aften!"
@@ -39,17 +39,17 @@ class WordOutput {
                         row {
                             cell "19:30", font: [family: 'Noto Mono']
                             cell """\
-                                Åbn den kuvert, som I modtog sammen med vinen fra Brugsen.
+                                I åbner den kuvert, som I modtog sammen med vinen fra Brugsen.
                                 Giv hver gæst deres postkort, som fortæller, hvor de skal gå hen til hovedretten. 
                                 Sig pænt farvel og gør klar til næste ryk ind.""".stripIndent()
                         }
                         row {
                             cell "20:00", font: [family: 'Noto Mono']
-                            cell "Andet hold gæster kommer til hovedret."
+                            cell "Andet hold gæster kommer til hovedret. Herefter spiser I hovedret og hygger jer."
                         }
                         row {
                             cell "21:30", font: [family: 'Noto Mono']
-                            cell "Nu er det så småt tid til at afslutte hovedretten og bevæge sig op i hallen på Gl. Rye Skole, hvor festen fortsætter."
+                            cell "Det er så småt tid til at afslutte hovedretten og bevæge jer op i hallen på Gl. Rye Skole, hvor festen fortsætter."
                         }
                         row {
                             cell "22:00", font: [family: 'Noto Mono']
@@ -62,16 +62,8 @@ class WordOutput {
                             cell "Festen slutter!"
                         }
                     }
-                    paragraph 'Det er vigtigt, at tidspunkterne for forret og hovedret holdes.'
+                    paragraph 'Det er vigtigt, at tidspunkterne for forret og hovedret holdes, så programmet ikke skrider.'
                     paragraph()
-                    paragraph 'Husk at sende en varm tanke til vores sponsorer:'
-                    paragraph {
-                        text "- Dagli'Brugsen - Byens Egen Butik: Vin til maden"
-                        lineBreak()
-                        text("- Lyng Dal Hotel og Restaurant: Dessert")
-                        lineBreak()
-                        text("- Søhøjlandets Kaffe: Kaffe")
-                    }
                     greeting.call()
                     pageBreak()
 
@@ -92,7 +84,7 @@ class WordOutput {
                 hosts.hosts.each { host ->
                     paragraph "Kære $host.shortNames", style: 'bold'
                     paragraph "Denne kuvert må først åbnes den 7. marts kl. 19:30. ", style: 'bold'
-                    paragraph "Den indeholder et postkort til hver af jeres gæster, som fortæller dem, hvem de skal besøge til hovedretten."
+                    paragraph "Den indeholder et postkort til jer, og et til hver af jeres gæster, som fortæller dem, hvem de skal besøge til hovedretten."
                     paragraph "Vi håber I får en god aften sammen med jeres gæster!"
                     greeting.call()
                     pageBreak()
@@ -106,7 +98,7 @@ class WordOutput {
 
         WordDocumentBuilder wordBuilder = new WordDocumentBuilder(new File(directory, 'postkort-gæster.docx'))
         greeting.delegate = wordBuilder
-        Closure footer = footer(80)
+        Closure footer = footer(width: 80)
         footer.delegate = wordBuilder
         wordBuilder.create {
             document(a6Args + [footer: footer]) {
@@ -188,22 +180,22 @@ class WordOutput {
 //
 //
 //            Brugsens Bestyrelse.
-    private static Closure footer(int width = 150) {
+    private static Closure footer(Map args = [:]) {
         return { info ->
-            table(border: [size: 0], padding: 1.px) {
+            table(border: [size: 0], padding: 2.px) {
                 row {
-                    cell "Sponsorer", align: 'center'
+                    cell args.sponsors ?: 'Sponsors', align: 'center'
                 }
                 row {
                     cell {
-                        image(data: getImage('/daglibrugsen.png'), width: width, name: 'daglibrugsen.png')
+                        image(data: getImage('/daglibrugsen.png'), width: args.width ?: 150, name: 'daglibrugsen.png')
                     }
                     cell(align: 'center') {
-                        image(data: getImage('/lyngdal.png'), width: width, name: 'lyngdal.png')
+                        image(data: getImage('/lyngdal.png'), width: args.width ?: 150, name: 'lyngdal.png')
 
                     }
                     cell(align: 'right') {
-                        image(data: getImage('/søhøjlandets-kaffe.png'), width: width, name: 'søhøjlandets-kaffe.png')
+                        image(data: getImage('/søhøjlandets-kaffe.png'), width: args.width ?: 150, name: 'søhøjlandets-kaffe.png')
                     }
                 }
             }

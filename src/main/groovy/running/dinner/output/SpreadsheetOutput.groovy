@@ -237,7 +237,7 @@ class SpreadsheetOutput {
     }
 
     static buildAddresses(Hosts hosts) {
-        File file = new File(directory, 'adresser.xlsx')
+        File file = new File(directory, 'host-adresser.xlsx')
         println file.absolutePath
 
         PoiSpreadsheetBuilder.create(file).build {
