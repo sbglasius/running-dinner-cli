@@ -60,7 +60,7 @@ class MessageTemplates {
 
             Velkommen til fest!
             
-        """.stripIndent()+greeting
+        """.stripIndent() + greeting
     }
 
     private static String hensyn(List<GuestGroup> guestGroups, String ret) {
@@ -117,7 +117,7 @@ class MessageTemplates {
 
             Velkommen til fest!
 
-        """.stripIndent()+greeting
+        """.stripIndent() + greeting
     }
 
     static String createTeaserMail(GuestGroup guestGroup) {
@@ -144,7 +144,22 @@ class MessageTemplates {
             - Gl. Ryes Borgerforening: For Mobile Pay til festen.
             - Initiativgruppen af 99: For hjælp til pyntning af hallen.
 
-        """.stripIndent()+greeting
+        """.stripIndent() + greeting
+    }
+
+    static String createCorrection(GuestGroup guestGroup) {
+        """\
+            Kære ${guestGroup.shortNames}
+
+            Der er desværre indsneget sig en fejl på det postkort I vil modtage, når I er til forret. 
+
+            På kortet vil der stå husnummeret 10, men det rigtige husnummer er 15. Så I skal altså gå til adressen på kortet, men udskifte nr. 10 med nr. 15.
+
+            I ikke får hele adressen, for så forsvinder overraskelsen  :-)
+
+            Vi prøver også at sende en reminder SMS ud til jer på lørdag omkring kl. 19:30.
+
+        """.stripIndent() + greeting
     }
 
     static String createHelperMail(Guest guest) {
@@ -165,7 +180,7 @@ class MessageTemplates {
 
             På forhånd tak,            
 
-        """.stripIndent()+greeting
+        """.stripIndent() + greeting
     }
 
     private static String getGreeting() {

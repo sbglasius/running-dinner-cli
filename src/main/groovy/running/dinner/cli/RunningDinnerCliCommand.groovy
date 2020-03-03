@@ -151,6 +151,12 @@ class RunningDinnerCliCommand implements Runnable {
                 }
             }
         }
+        if(1==2) {
+            hosts.hosts.find { it.hostAddress.startsWith('Hedelundvej 15')}.mainCourseGuests.each {
+                sendEmail.simpleMail("Running Dinner - VIGTIGT!", MessageTemplates.createCorrection(it), *it.guests)
+            }
+        }
+
         if (spreadsheet) {
             SpreadsheetOutput.buildSpreadsheet(hosts)
         }
