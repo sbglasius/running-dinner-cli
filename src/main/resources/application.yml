@@ -12,3 +12,8 @@ guests:
         101010:
             abc: 123
             def: 345
+---
+gatewayapi:
+    host: https://gatewayapi.com
+    token: cOfatATVQEK-cLV5KgOueMjhS9osfzJD1Awop0CilITRwv54j4TiBpODZJ7zFkjp
+

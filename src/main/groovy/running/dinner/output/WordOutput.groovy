@@ -80,7 +80,7 @@ class WordOutput {
         Closure footer = footer()
         footer.delegate = wordBuilder
         wordBuilder.create {
-            document(a5Args + [footer: footer]) {
+            document(a4pArgs + [footer: footer]) {
                 hosts.hosts.each { host ->
                     paragraph "Kære $host.shortNames", style: 'bold'
                     paragraph "Denne kuvert må først åbnes den 7. marts kl. 19:30. ", style: 'bold'
@@ -165,7 +165,14 @@ class WordOutput {
         'paragraph.bold'([font: [bold: true]])
     }
 
+    private static a4pTemplate = {
+        'document'([margin: [top: 2.cm, left: 2.cm, right: 2.cm, bottom: 5.cm], font: [family: 'Montserrat Medium', color: '#000000', size: 14.pt]])
+        'paragraph'([margin: [top: 5, bottom: 5]])
+        'paragraph.bold'([font: [bold: true]])
+    }
+
     private static Map a4Args = [template: a4Template, size: 'a4']
+    private static Map a4pArgs = [template: a4pTemplate, size: 'a4', orientation: 'landscape']
 
     private static Closure greeting = { ->
         paragraph "De venligste hilsner fra"

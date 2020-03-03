@@ -147,6 +147,27 @@ class MessageTemplates {
         """.stripIndent()+greeting
     }
 
+    static String createHelperMail(Guest guest) {
+        """\
+            Kære ${guest.name}
+
+            Nu er der kun en uge til, vi skal holde fest. Alle detaljer er ved at være på plads, og nu kommer alt det praktisk arbejde med at få selve festen stablet på benene.
+
+            Du skrev i din tilmelding, at du gerne vil hjælpe, og det er mægtig glade for! Vi har nemlig brug for en masse hænder til at gøre hallen klar til fest, og til at gøre den klar til skolebørnene igen inden mandag morgen. Vi kan kun klare det ved fælles hjælp.
+
+            Vi har brug for hjælp til opsætning og oppyntning i hallen lørdag fra ca. 10:00 - 16:00, og oprydning og rengøring i hallen søndag fra 9:30 - 14:00. Hvis vi er mange, kan vi sikkert gøre det hele på kortere tid. 
+
+            Hvis du ikke har mulighed for at hjælpe lørdag eller søndag har vi også andre opgaver før festen. Bl.a. har vi ting, der skal hentes rundt omkring i løbet af ugen og pynt, der skal forberedes. 
+
+            For at få overblik over, hvor mange hænder, vi har til rådighed, vil vi bede dig udfylde et ganske kort spørgeskema (det tager under et minut), så vi ved, hvornår du har tid:
+
+            https://docs.google.com/forms/d/e/1FAIpQLSc7S9hOk5wyjFMiXuenks3vfpg9-RaQ73pYbv-qgH4ykh3vZA/viewform?usp=pp_url&entry.541231881=${URLEncoder.encode(guest.name, 'UTF-8')}&entry.1206991931=${guest.email}&entry.488223695=${guest.mobile}
+
+            På forhånd tak,            
+
+        """.stripIndent()+greeting
+    }
+
     private static String getGreeting() {
         """\
             De venligste hilsner fra

@@ -20,6 +20,7 @@ import running.dinner.output.SpreadsheetOutput
 import running.dinner.output.WordOutput
 import running.dinner.processor.GuestProcessor
 import running.dinner.processor.GuestRandomizer
+import running.dinner.sms.SendSms
 import running.dinner.templates.MessageTemplates
 import running.dinner.transfer.ExportImport
 
@@ -38,6 +39,9 @@ class RunningDinnerCliCommand implements Runnable {
     @Inject
     SendEmail sendEmail
 
+    @Inject
+    SendSms sendSms
+
     @Option(names = ['-v', '--verbose'], description = 'Print reg json')
     boolean verbose = false
 
@@ -50,11 +54,20 @@ class RunningDinnerCliCommand implements Runnable {
     @Option(names = ['--hostEmail'], description = 'Send first email to hosts')
     boolean hostEmail = false
 
+    @Option(names = ['--helperEmail'], description = 'Send helper email to guests')
+    boolean helperEmail = false
+
     @Option(names = ['--guestEmail'], description = 'Send first email to guests')
     boolean guestEmail = false
 
+    @Option(names = ['--sheet'], description = 'Create spreadsheet')
+    boolean spreadsheet = false
+
     @Option(names = ['--documents'], description = 'Create documents')
-    boolean documents = true
+    boolean documents = false
+
+    @Option(names = ['--sms'], description ='Send sms')
+    boolean sms = false
 
     static void main(String[] args) throws Exception {
         PicocliRunner.run(RunningDinnerCliCommand.class, args)
@@ -62,10 +75,11 @@ class RunningDinnerCliCommand implements Runnable {
 
     void run() {
         Hosts hosts = ExportImport.importData()
+        List<Map> data = fetchDataService.fetchData()
         if (!hosts) {
 
             log.debug("New data fetch")
-            List<Map> data = fetchDataService.fetchData()
+            data = fetchDataService.fetchData()
             log.debug("Alm mad: ${data.count { it.allergener == 'Ingen særlige hensyn' }}")
             log.debug("Vegetar: ${data.count { it.allergener == 'Vegetar' }}")
             log.debug("Veganer: ${data.count { it.allergener == 'Veganer' }}")
@@ -82,7 +96,10 @@ class RunningDinnerCliCommand implements Runnable {
             hosts.notAllocated = randomizer.notAllocated
             ExportImport.exportData(hosts)
         }
-
+        hosts.getEverybody()*.guests.flatten().each { Guest guest ->
+            Map d = data.find { it.navn == guest.name }
+            guest.helper = d.hjaelper ?: false
+        }
         if (verbose) {
             hosts.hosts.each { host ->
                 println('-' * 80)
@@ -95,7 +112,6 @@ class RunningDinnerCliCommand implements Runnable {
             }
         }
         if (map) {
-//            generateMapData(hosts.hosts*.hostAddress)
             SpreadsheetOutput.buildAddresses(hosts)
         }
 
@@ -106,6 +122,14 @@ class RunningDinnerCliCommand implements Runnable {
             }
 
         }
+
+        if (helperEmail) {
+            hosts.allGuests*.guests.flatten().findAll { it.helper }.each { Guest guest ->
+                sendEmail.simpleMail("Running Dinner", MessageTemplates.createHelperMail(guest), guest)
+
+            }
+        }
+
         if (hostEmail) {
             hosts.hosts.each { host ->
                 sendEmail.simpleMail("Running Dinner", MessageTemplates.createHostEmail(host), *host.guests)
@@ -127,12 +151,31 @@ class RunningDinnerCliCommand implements Runnable {
                 }
             }
         }
-        if (documents) {
+        if (spreadsheet) {
             SpreadsheetOutput.buildSpreadsheet(hosts)
+        }
+        if (documents) {
             WordOutput.hostWineInformation(hosts)
             WordOutput.hostEnvelopeWithPostcards(hosts)
             WordOutput.guestsPostcards(hosts)
         }
+        if(sms) {
+            List<String> mobiles = hosts.hosts.guests.flatten()*.mobile.unique()
+            mobiles = ['40449188',*mobiles]
+//            sendSms.sendMessage("""\
+//                Hej Running Dinner værter
+//
+//                Så er vinen, som er sponseret af Byens Egen Butik pakket og klar til afhentning. Når du henter den, så husk også kuverten som skal bruges den 7. marts. Bemærk, at der er navn på hver kuvert!
+//
+//                Vi glæder os til at holde fest med jer!
+//
+//                De bedste hilsner
+//                Running Dinner udvalget i
+//                Brugsens bestyrelse
+//                """.stripIndent(), *mobiles)
+//            sendSms.sendTimedMessage("Hej med dig", LocalDateTime.now().plusMinutes(2), '40449188')
+        }
+
 
         // Sanity check
         log.debug("Entre seats: ${hosts.hosts.sum { it.entreCourseSeats }}")

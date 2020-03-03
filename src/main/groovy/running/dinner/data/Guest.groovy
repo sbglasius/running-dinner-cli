@@ -13,6 +13,7 @@ class Guest {
     String allergener
     String hensyn
 
+    boolean helper = false
     boolean single = false
 
     @JsonIgnore
