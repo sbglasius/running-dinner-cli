@@ -2032,21 +2032,21 @@
                 {
                     "guests": [
                         {
-                            "name": "Kjeld Slot Nielsen",
-                            "mobile": "23497189",
-                            "email": "Kjeldslot@gmail.com",
-                            "adresse": "Præstegårdsvej 1 Gl. Rye",
+                            "name": "Lars Bjerregaard Hansen",
+                            "mobile": "26748689",
+                            "email": "abh@ign.ku.dk",
+                            "adresse": "Himmelbjergvej 7, Gl. Rye",
                             "allergener": "Ingen særlige hensyn",
                             "hensyn": null,
                             "single": false
                         },
                         {
-                            "name": "Iben Johanne Thomsen",
-                            "mobile": "61142535",
-                            "email": "Ibenjohanne@icloud.com",
-                            "adresse": "Præstegårdsvej 1 GL Rye",
-                            "allergener": "Allergier eller andet",
-                            "hensyn": "Allergisk over for blåmuslinger",
+                            "name": "Susanne Tougaard Hansen",
+                            "mobile": "26748689",
+                            "email": "Susannetougaardhansen@gmail.com",
+                            "adresse": "Himmelbjergvej 7, Gl. Rye",
+                            "allergener": "Ingen særlige hensyn",
+                            "hensyn": null,
                             "single": false
                         }
                     ]
@@ -2495,21 +2495,21 @@
                 {
                     "guests": [
                         {
-                            "name": "Kjeld Slot Nielsen",
-                            "mobile": "23497189",
-                            "email": "Kjeldslot@gmail.com",
-                            "adresse": "Præstegårdsvej 1 Gl. Rye",
+                            "name": "Lars Bjerregaard Hansen",
+                            "mobile": "26748689",
+                            "email": "abh@ign.ku.dk",
+                            "adresse": "Himmelbjergvej 7, Gl. Rye",
                             "allergener": "Ingen særlige hensyn",
                             "hensyn": null,
                             "single": false
                         },
                         {
-                            "name": "Iben Johanne Thomsen",
-                            "mobile": "61142535",
-                            "email": "Ibenjohanne@icloud.com",
-                            "adresse": "Præstegårdsvej 1 GL Rye",
-                            "allergener": "Allergier eller andet",
-                            "hensyn": "Allergisk over for blåmuslinger",
+                            "name": "Susanne Tougaard Hansen",
+                            "mobile": "26748689",
+                            "email": "Susannetougaardhansen@gmail.com",
+                            "adresse": "Himmelbjergvej 7, Gl. Rye",
+                            "allergener": "Ingen særlige hensyn",
+                            "hensyn": null,
                             "single": false
                         }
                     ]
