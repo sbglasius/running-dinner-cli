@@ -12,6 +12,7 @@ import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import running.dinner.data.Guest
 import running.dinner.data.GuestGroup
+import running.dinner.data.Host
 import running.dinner.data.Hosts
 import running.dinner.email.SendEmail
 import running.dinner.flexbillet.FlexbilletService
@@ -67,7 +68,7 @@ class RunningDinnerCliCommand implements Runnable {
     boolean documents = false
 
     @Option(names = ['--sms'], description ='Send sms')
-    boolean sms = false
+    boolean sms = true
 
     static void main(String[] args) throws Exception {
         PicocliRunner.run(RunningDinnerCliCommand.class, args)
@@ -166,8 +167,8 @@ class RunningDinnerCliCommand implements Runnable {
             WordOutput.guestsPostcards(hosts)
         }
         if(sms) {
-            List<String> mobiles = hosts.hosts.guests.flatten()*.mobile.unique()
-            mobiles = ['40449188',*mobiles]
+//            List<String> mobiles = hosts.hosts.guests.flatten()*.mobile.unique()
+//            mobiles = ['40449188',*mobiles]
 //            sendSms.sendMessage("""\
 //                Hej Running Dinner værter
 //
@@ -179,7 +180,27 @@ class RunningDinnerCliCommand implements Runnable {
 //                Running Dinner udvalget i
 //                Brugsens bestyrelse
 //                """.stripIndent(), *mobiles)
-//            sendSms.sendTimedMessage("Hej med dig", LocalDateTime.now().plusMinutes(2), '40449188')
+//            sendSms.sendTimedMessage("Gå i seng", LocalDateTime.of(2020,3,3,23,34), '40449188')
+            hosts.hosts.each { host ->
+                host.entreCourseGuests.each { guestGroup ->
+                    Host nextHost = hosts.findMainCourseHost(guestGroup)
+                    guestGroup.guests.each { guest ->
+                        LocalDateTime schedule = LocalDateTime.of(2020, 3, 7, 17, 30)
+                        println ">> sendes ${schedule} ${guest.mobile}".padRight(80, '-')
+                        println MessageTemplates.createTeaserSMS(host, guest)
+//                        schedule = LocalDateTime.of(2020, 3, 7, 19, 35)
+//                        println ">> sendes ${schedule} ${guest.mobile}".padRight(80, '-')
+//                        println MessageTemplates.createMainCourseSMS(nextHost, guest)
+//                        schedule = LocalDateTime.of(2020, 3, 7, 21, 35)
+//                        println ">> sendes ${schedule} ${guest.mobile}".padRight(80, '-')
+//                        println MessageTemplates.createEndOfCoursesSMS(guest)
+//                        schedule = LocalDateTime.of(2020, 3, 8, 8, 30)
+//                        println ">> sendes ${schedule} ${guest.mobile}".padRight(80, '-')
+//                        println MessageTemplates.createCleanupSMS(guest)
+                    }
+
+                }
+            }
         }
 
 

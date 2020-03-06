@@ -183,6 +183,51 @@ class MessageTemplates {
         """.stripIndent() + greeting
     }
 
+    static String createTeaserSMS(Host host, Guest guest) {
+        """\
+            Kære ${guest.name}
+
+            Nu er der kun 30 minutter til at Running Dinner starter!
+
+            Til forret skal du besøge ${host.shortNames} som bor ${host.hostAddress - ', Gl. Rye'}.
+
+            Ha' en rigtig god fest!
+
+        """.stripIndent() + greeting
+    }
+
+    static String createMainCourseSMS(Host host, Guest guest) {
+        """\
+            Kære ${guest.name}
+
+            Alle skifter :-) Sig pænt tak for mad, tag overtøj på og begiv dig hen til ${host.shortNames} som bor ${host.hostAddress - ', Gl. Rye'}. 
+
+            Fortsat god fest!
+
+        """.stripIndent() + greeting
+    }
+
+    static String createEndOfCoursesSMS(Guest guest) {
+        """\
+            Kære ${guest.name}
+
+            Nu er det igen tid til at sige pænt tak for mad. Vi håber det har været hyggeligt! 
+
+            Vi ses i hallen på Gl. Rye skole!
+        """.stripIndent() + greeting
+    }
+
+    static String createCleanupSMS(Guest guest) {
+        """\
+            Kære ${guest.name}
+
+            Vi rydder op i hallen fra 9:30. Hvis du har tid, kan vi godt bruge en hånd!
+
+            Vi ses i hallen på Gl. Rye skole!
+        """.stripIndent() + greeting
+    }
+
+
     private static String getGreeting() {
         """\
             De venligste hilsner fra

@@ -25,6 +25,7 @@ class SendSms {
         ZoneId zone = ZoneId.of("Europe/Copenhagen")
         ZoneOffset zoneOffset = zone.rules.getOffset(sendTime)
         Map response = smsClient.sendMessage('RD Gl. Rye'.take(11), message, sendTime.toEpochSecond(zoneOffset), msisdns)
+        log.debug("SMS response: $response")
 
     }
 
